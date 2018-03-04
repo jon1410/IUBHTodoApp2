@@ -5,6 +5,7 @@ import android.os.StrictMode;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.BuildConfig;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.entities.Models;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.DBUtil;
 import io.requery.Persistable;
 import io.requery.android.sqlite.DatabaseSource;
 import io.requery.reactivex.ReactiveEntityStore;
@@ -29,15 +30,7 @@ public class TodoApplication extends Application {
 
     ReactiveEntityStore<Persistable> getDataStore() {
         if (dataStore == null) {
-            // override onUpgrade to handle migrating to a new version
-            DatabaseSource source = new DatabaseSource(this, Models.DEFAULT, 1);
-            if (BuildConfig.DEBUG) {
-                // use this in development mode to drop and recreate the tables on every upgrade
-                source.setTableCreationMode(TableCreationMode.DROP_CREATE);
-            }
-            Configuration configuration = source.getConfiguration();
-            dataStore = ReactiveSupport.toReactiveStore(
-                    new EntityDataStore<Persistable>(configuration));
+            dataStore = DBUtil.createReactiveEntityStore(this);
         }
         return dataStore;
     }
