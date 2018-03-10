@@ -8,13 +8,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.iubh.fernstudium.iwmb.iubhtodoapp.entities.User;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.entities.UserEntity;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.User;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.UserEntity;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.DBUtil;
 import io.reactivex.Single;
 import io.requery.Persistable;
+import io.requery.query.Scalar;
 import io.requery.reactivex.ReactiveEntityStore;
 import io.requery.reactivex.ReactiveScalar;
+import io.requery.sql.EntityDataStore;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -27,7 +29,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(AndroidJUnit4.class)
 public class UserAndroidTest {
 
-    private ReactiveEntityStore<Persistable> dataStore;
+    private EntityDataStore<Persistable> dataStore;
 
     @Before
     public void initialize(){
@@ -44,11 +46,11 @@ public class UserAndroidTest {
     @Test
     public void testInsert(){
         UserEntity userEntity = createUserEntity();
-        Single<UserEntity> result = dataStore.insert(userEntity);
+        UserEntity result = dataStore.insert(userEntity);
         assertNotNull(result);
-        System.out.println(result.blockingGet().toString());
+        System.out.println(result.toString());
 
-        ReactiveScalar<Integer> r = dataStore.count(User.class).get();
+        Scalar<Integer> r = dataStore.count(User.class).get();
         assertNotNull(r);
 
         assertEquals(new Integer(1), r.value());

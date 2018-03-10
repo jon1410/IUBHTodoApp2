@@ -10,13 +10,15 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.BuildConfig;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.entities.User;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.entities.UserEntity;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.User;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.UserEntity;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.DBUtil;
 import io.reactivex.Single;
 import io.requery.Persistable;
+import io.requery.query.Scalar;
 import io.requery.reactivex.ReactiveEntityStore;
 import io.requery.reactivex.ReactiveScalar;
+import io.requery.sql.EntityDataStore;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -28,9 +30,9 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 26)
-public class UserMockitoTest {
+public class UserRobolectricTest {
 
-    private ReactiveEntityStore<Persistable> dataStore;
+    private EntityDataStore<Persistable> dataStore;
 
     @Before
     public void initialize(){
@@ -47,14 +49,13 @@ public class UserMockitoTest {
     @Test
     public void testInsert(){
         UserEntity userEntity = createUserEntity();
-        Single<UserEntity> result = dataStore.insert(userEntity);
-        assertNotNull(result);
-        System.out.println(result.blockingGet().toString());
+        UserEntity createdEntity = dataStore.insert(userEntity);
+        assertNotNull(createdEntity);
+        System.out.println(createdEntity.toString());
 
-        ReactiveScalar<Integer> r = dataStore.count(User.class).get();
-        assertNotNull(r);
-
-        assertEquals(new Integer(1), r.value());
+        Scalar<Integer> count = dataStore.count(User.class).get();
+        assertNotNull(count);
+        assertEquals(new Integer(1), count.value());
     }
 
     private UserEntity createUserEntity() {

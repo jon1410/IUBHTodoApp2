@@ -9,8 +9,18 @@
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_not_matching_password">The given Password does not match the stored one for this user.</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="user_not_found_exception">The user was not found.</string>
+    <string name="dialog_create_new_user">The user does not exist, do you wish to create it?</string>
+    <string name="dialog_user_created">The user was created, please log in.</string>
+    <string name="dialog_user_could_not_be_created">The user could not be created, please try again later.</string>
+    <string name="dialog_user_not_created">The user was not created.</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <string name="login_successful">Login successful!</string>
+
 </resources>

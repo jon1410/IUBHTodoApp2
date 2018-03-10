@@ -1,4 +1,4 @@
-package de.iubh.fernstudium.iwmb.iubhtodoapp.entities;
+package de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities;
 
 import android.databinding.Bindable;
 import android.databinding.Observable;

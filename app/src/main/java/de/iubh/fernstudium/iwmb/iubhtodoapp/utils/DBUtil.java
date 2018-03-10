@@ -3,7 +3,7 @@ package de.iubh.fernstudium.iwmb.iubhtodoapp.utils;
 import android.content.Context;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.BuildConfig;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.entities.Models;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Models;
 import io.requery.Persistable;
 import io.requery.android.sqlite.DatabaseSource;
 import io.requery.reactivex.ReactiveEntityStore;
@@ -18,8 +18,8 @@ import io.requery.sql.TableCreationMode;
 
 public class DBUtil {
 
-    public static ReactiveEntityStore<Persistable> createReactiveEntityStore(Context context) {
-        ReactiveEntityStore<Persistable> dataStore;
+    public static EntityDataStore<Persistable> createReactiveEntityStore(Context context) {
+        EntityDataStore<Persistable> dataStore;
         // override onUpgrade to handle migrating to a new version
         DatabaseSource source = new DatabaseSource(context, Models.DEFAULT, 1);
 
@@ -28,8 +28,7 @@ public class DBUtil {
             source.setTableCreationMode(TableCreationMode.DROP_CREATE);
         }
         Configuration configuration = source.getConfiguration();
-        dataStore = ReactiveSupport.toReactiveStore(
-                new EntityDataStore<Persistable>(configuration));
+        dataStore = new EntityDataStore<Persistable>(configuration);
         return dataStore;
     }
 }
