@@ -1,18 +1,10 @@
 package de.iubh.fernstudium.iwmb.iubhtodoapp.db.services;
 
-import org.mindrot.jbcrypt.BCrypt;
-
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.User;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.UserEntity;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.exceptions.UserNotFoundException;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.PasswordUtil;
-import io.reactivex.Scheduler;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import io.requery.Persistable;
-import io.requery.reactivex.ReactiveEntityStore;
 import io.requery.sql.EntityDataStore;
 
 /**
@@ -22,8 +14,6 @@ import io.requery.sql.EntityDataStore;
 public class UserDBService {
 
     private EntityDataStore<Persistable> dataStore;
-    private User user;
-    private boolean userCreated;
 
     public UserDBService(EntityDataStore<Persistable> dataStore) {
         this.dataStore = dataStore;
