@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="todo" type="de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo"/>
+    </data>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+        <TextView android:id="@+id/title"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView android:id="@+id/description"
+            android:layout_toRightOf="@+id/title"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{todo.description}"
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView android:id="@+id/duedate"
+            android:layout_toRightOf="@+id/description"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{todo.duedate}"
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"/>
+
+        <ToggleButton android:id="@+id/fav"
+            android:layout_toRightOf="@+id/duedate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="toggleFavorite"/>
+    </RelativeLayout>
+</layout>

@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.TodoApplication;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.User;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.services.UserDBService;
@@ -206,7 +208,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return;
         }
 
-        //String hashedPw = PasswordUtil.hashPw(password);
         try {
             boolean passwordsEq = PasswordUtil.checkPw(password, user.getEncryptedPw());
             if(!passwordsEq){
@@ -217,7 +218,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
         showProgress(false);
         Toast.makeText(this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
-        //TODO - Activity swtich
+        Intent intent = new Intent(this, ListTodosActivitiy.class);
+        intent.putExtra(Constants.CURR_USER_KEY, user.getUserName());
+        startActivity(intent);
     }
 
     private void showLoginError(String errorMsg) {
@@ -295,7 +298,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             emails.add(cursor.getString(ProfileQuery.ADDRESS));
             cursor.moveToNext();
         }
-
         addEmailsToAutoComplete(emails);
     }
 
