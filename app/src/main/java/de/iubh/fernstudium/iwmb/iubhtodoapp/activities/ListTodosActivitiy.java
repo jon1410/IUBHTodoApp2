@@ -3,20 +3,20 @@ package de.iubh.fernstudium.iwmb.iubhtodoapp.activities;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+
+import java.util.List;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.BindingHolder;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.TodoApplication;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.databinding.TodoItemBinding;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.TodoEntity;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.adapter.TodoAdapter;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.services.TodoDBService;
-import io.requery.android.QueryRecyclerAdapter;
-import io.requery.query.Result;
+import io.requery.Persistable;
+
+import io.requery.reactivex.ReactiveEntityStore;
 
 public class ListTodosActivitiy extends AppCompatActivity {
 
@@ -27,43 +27,39 @@ public class ListTodosActivitiy extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list_todo_activity);
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        todoDBService = new TodoDBService(getDataStore());
 
-        todoAdapter = new TodoAdapter();
-        recyclerView.setAdapter(todoAdapter);
-        todoDBService = new TodoDBService(((TodoApplication) getApplication()).getDataStore());
+        getSupportActionBar().setTitle("Test");
+        setContentView(R.layout.list_todo_activity);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         currentUser = getIntent().getStringExtra(Constants.CURR_USER_KEY);
+
+        todoAdapter = new TodoAdapter(getTodosForUser());
+        recyclerView.setAdapter(todoAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    class TodoAdapter extends QueryRecyclerAdapter<TodoEntity, BindingHolder<TodoItemBinding>> implements View.OnClickListener {
-
-        public TodoAdapter() {
-            super(TodoEntity.$TYPE);
+    @Override
+    protected void onResume() {
+        if(todoAdapter == null){
+            todoAdapter = new TodoAdapter(getTodosForUser());
+        }else{
+            todoAdapter.setTodos(getTodosForUser());
         }
+        super.onResume();
+    }
 
-        @Override
-        public Result<TodoEntity> performQuery() {
-            return null;
-        }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        todoAdapter = null;
+    }
 
-        @Override
-        public BindingHolder<TodoItemBinding> onCreateViewHolder(ViewGroup parent, int viewType) {
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            TodoItemBinding binding = TodoItemBinding.inflate(inflater);
-            binding.getRoot().setTag(binding);
-            binding.getRoot().setOnClickListener(this);
-            return new BindingHolder<>(binding);
-        }
+    private List<Todo> getTodosForUser(){
+        return todoDBService.getTodosAsListForUser(currentUser);
+    }
 
-        @Override
-        public void onBindViewHolder(TodoEntity item, BindingHolder<TodoItemBinding> holder, int position) {
-            super.onBindViewHolder(holder, position);
-        }
-
-        @Override
-        public void onClick(View v) {
-            // TODO: 17.03.2018 add onClick behaviour
-        }
+    private ReactiveEntityStore<Persistable> getDataStore(){
+        return ((TodoApplication) getApplication()).getDataStore();
     }
 }

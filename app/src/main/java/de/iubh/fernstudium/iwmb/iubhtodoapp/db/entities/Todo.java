@@ -12,11 +12,13 @@ import io.requery.Generated;
 import io.requery.Key;
 import io.requery.ManyToOne;
 import io.requery.Persistable;
+import io.requery.Table;
 
 /**
  * Created by ivanj on 03.03.2018.
  */
 
+@Table(name = "Todo")
 @Entity
 public interface Todo extends Persistable, Observable, Parcelable {
 

@@ -5,6 +5,8 @@ import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.UserEntity;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.exceptions.UserNotFoundException;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.PasswordUtil;
 import io.requery.Persistable;
+import io.requery.reactivex.ReactiveEntityStore;
+import io.requery.reactivex.ReactiveSupport;
 import io.requery.sql.EntityDataStore;
 
 /**
@@ -13,9 +15,13 @@ import io.requery.sql.EntityDataStore;
 
 public class UserDBService {
 
-    private EntityDataStore<Persistable> dataStore;
+    private ReactiveEntityStore<Persistable> dataStore;
 
     public UserDBService(EntityDataStore<Persistable> dataStore) {
+        this.dataStore = ReactiveSupport.toReactiveStore(dataStore);
+    }
+
+    public UserDBService(ReactiveEntityStore<Persistable> dataStore) {
         this.dataStore = dataStore;
     }
 
@@ -24,7 +30,7 @@ public class UserDBService {
     }
 
     public User getUser(String userName) throws UserNotFoundException{
-        UserEntity userEntity = dataStore.findByKey(UserEntity.class, userName);
+        UserEntity userEntity = dataStore.toBlocking().findByKey(UserEntity.class, userName);
         if(userEntity == null){
             throw new UserNotFoundException("User not found");
         }
@@ -36,7 +42,7 @@ public class UserDBService {
         userEntity.setUserName(userName);
 
         userEntity.setEncryptedPw(PasswordUtil.hashPw(pw));
-        UserEntity createdUserEntity = dataStore.insert(userEntity);
+        UserEntity createdUserEntity = dataStore.toBlocking().insert(userEntity);
         if(createdUserEntity != null){
             return true;
         }

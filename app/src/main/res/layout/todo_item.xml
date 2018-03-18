@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="todo" type="de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo"/>
     </data>
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:orientation="vertical">
         <TextView android:id="@+id/title"
             android:layout_centerVertical="true"
             android:layout_width="match_parent"
@@ -26,7 +28,7 @@
             android:layout_centerVertical="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{todo.duedate}"
+            app:timestamp="@{todo.dueDate}"
             android:textSize="20sp"
             android:layout_marginLeft="10dp"/>
 
@@ -35,5 +37,5 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="toggleFavorite"/>
-    </RelativeLayout>
+    </LinearLayout>
 </layout>

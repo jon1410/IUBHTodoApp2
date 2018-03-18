@@ -34,7 +34,7 @@ import static org.junit.Assert.assertTrue;
 @Config(constants = BuildConfig.class, sdk = 26)
 public class UserDBServiceTest {
 
-    private EntityDataStore<Persistable> dataStore;
+    private ReactiveEntityStore<Persistable> dataStore;
     private UserDBService userDBService;
 
     @Before

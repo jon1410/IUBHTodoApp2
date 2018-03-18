@@ -18,8 +18,8 @@ import io.requery.sql.TableCreationMode;
 
 public class DBUtil {
 
-    public static EntityDataStore<Persistable> createReactiveEntityStore(Context context) {
-        EntityDataStore<Persistable> dataStore;
+    public static ReactiveEntityStore<Persistable> createReactiveEntityStore(Context context) {
+        ReactiveEntityStore<Persistable> dataStore;
         // override onUpgrade to handle migrating to a new version
         DatabaseSource source = new DatabaseSource(context, Models.DEFAULT, 1);
 
@@ -28,7 +28,8 @@ public class DBUtil {
             source.setTableCreationMode(TableCreationMode.DROP_CREATE);
         }
         Configuration configuration = source.getConfiguration();
-        dataStore = new EntityDataStore<Persistable>(configuration);
+        dataStore = ReactiveSupport.toReactiveStore(
+                new EntityDataStore<Persistable>(configuration));
         return dataStore;
     }
 }

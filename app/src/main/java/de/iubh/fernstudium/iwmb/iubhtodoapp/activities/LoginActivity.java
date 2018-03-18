@@ -35,12 +35,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.TodoApplication;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.User;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.db.services.TodoDBService;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.services.UserDBService;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.dialogs.CreateNewUserDialog;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.exceptions.InvalidPasswordException;
@@ -75,14 +77,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View progressView;
     private View loginFormView;
     private UserDBService userDBService;
+    private TodoDBService todoDBService;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // Set up the login form.
-        emailView = (AutoCompleteTextView) findViewById(R.id.email);
+        emailView = findViewById(R.id.email);
         populateAutoComplete();
 
         passwordView = (EditText) findViewById(R.id.password);
@@ -97,7 +99,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button emailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button emailSignInButton = findViewById(R.id.email_sign_in_button);
         emailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,7 +109,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         loginFormView = findViewById(R.id.login_form);
         progressView = findViewById(R.id.login_progress);
-        userDBService = new UserDBService(((TodoApplication) getApplication()).getDataStore());
+        ReactiveEntityStore<Persistable> entityDataStore = ((TodoApplication) getApplication()).getDataStore();
+        userDBService = new UserDBService(entityDataStore);
+        todoDBService = new TodoDBService(entityDataStore);
+
+        //init Data for Tests
+        initTestData();
     }
 
     private void populateAutoComplete() {
@@ -163,21 +170,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         emailView.setError(null);
         passwordView.setError(null);
 
-        // Store values at the time of the login attempt.
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             passwordView.setError(getString(R.string.error_invalid_password));
             focusView = passwordView;
             cancel = true;
         }
 
-        // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             emailView.setError(getString(R.string.error_field_required));
             focusView = emailView;
@@ -235,6 +239,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isPasswordValid(String password) {
         return password.length() >= 4;
+    }
+
+
+    private void initTestData() {
+        String adminUser = "admin@todo.de";
+        try {
+            User admin = userDBService.getUser(adminUser);
+        } catch (UserNotFoundException e) {
+            userDBService.createUser(adminUser, "admin");
+            for (int i=0; i<=1; i++){
+                todoDBService.createTodo("Test-Todo " + i, "Todo-Title " + i, Calendar.getInstance(), adminUser);
+            }
+        }
+
     }
 
     /**

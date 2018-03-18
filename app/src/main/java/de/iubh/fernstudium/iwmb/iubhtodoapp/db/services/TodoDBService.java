@@ -3,14 +3,18 @@ package de.iubh.fernstudium.iwmb.iubhtodoapp.db.services;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.TodoEntity;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.User;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.UserEntity;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.TodoStatus;
 import io.requery.Persistable;
 import io.requery.query.Result;
+import io.requery.reactivex.ReactiveEntityStore;
+import io.requery.reactivex.ReactiveSupport;
 import io.requery.sql.EntityDataStore;
 
 /**
@@ -19,9 +23,13 @@ import io.requery.sql.EntityDataStore;
 
 public class TodoDBService {
 
-    private EntityDataStore<Persistable> dataStore;
+    private ReactiveEntityStore<Persistable> dataStore;
 
     public TodoDBService(EntityDataStore<Persistable> dataStore) {
+        this.dataStore = ReactiveSupport.toReactiveStore(dataStore);
+    }
+
+    public TodoDBService(ReactiveEntityStore<Persistable> dataStore) {
         this.dataStore = dataStore;
     }
 
@@ -34,7 +42,12 @@ public class TodoDBService {
         todoEntity.setFavoriteFlag(false);
         todoEntity.setUser(assignee);
 
-        return dataStore.insert(todoEntity);
+        return dataStore.toBlocking().insert(todoEntity);
+    }
+
+    public Todo createTodo(String description, String title, Calendar dueDate, String assignee){
+        UserEntity user = dataStore.toBlocking().findByKey(UserEntity.class, assignee);
+        return createTodo(description, title, dueDate, user);
     }
 
     public boolean deleteTodo(int id){
@@ -47,7 +60,7 @@ public class TodoDBService {
     }
 
     public Todo getTodo(int id){
-        TodoEntity todoEntity = dataStore.findByKey(TodoEntity.class, id);
+        TodoEntity todoEntity = dataStore.toBlocking().findByKey(TodoEntity.class, id);
         return todoEntity;
     }
 
@@ -61,9 +74,18 @@ public class TodoDBService {
         return true;
     }
 
-    public List<Todo> getTodosForUser(User user){
-        Result<TodoEntity> queryResult = dataStore.select(TodoEntity.class).where(TodoEntity.USER.eq(user)).get();
-        return new ArrayList<Todo>(queryResult.toList());
+    public Result<TodoEntity> getTodosForUser(User user){
+        return dataStore.toBlocking().select(TodoEntity.class).where(TodoEntity.USER.eq(user)).get();
+    }
+
+    public Result<TodoEntity> getTodosForUser(String userId){
+        UserEntity user = dataStore.toBlocking().findByKey(UserEntity.class, userId);
+        return this.getTodosForUser(user);
+    }
+
+    public List<Todo> getTodosAsListForUser(String userId){
+        Result<TodoEntity> todoEntityResult = this.getTodosForUser(userId);
+        return new ArrayList<Todo>(todoEntityResult.toList());
     }
 
 }

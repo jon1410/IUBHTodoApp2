@@ -14,7 +14,7 @@ import io.requery.sql.EntityDataStore;
 
 public class TodoApplication extends Application {
 
-    private EntityDataStore<Persistable> dataStore;
+    private ReactiveEntityStore<Persistable> dataStore;
 
     @Override
     public void onCreate() {
@@ -22,7 +22,7 @@ public class TodoApplication extends Application {
         StrictMode.enableDefaults();
     }
 
-    public EntityDataStore<Persistable> getDataStore() {
+    public ReactiveEntityStore<Persistable> getDataStore() {
         if (dataStore == null) {
             dataStore = DBUtil.createReactiveEntityStore(this);
         }
