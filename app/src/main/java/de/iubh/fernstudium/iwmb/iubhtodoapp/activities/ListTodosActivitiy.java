@@ -31,7 +31,7 @@ public class ListTodosActivitiy extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Test");
         setContentView(R.layout.list_todo_activity);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         currentUser = getIntent().getStringExtra(Constants.CURR_USER_KEY);
 
         todoAdapter = new TodoAdapter(getTodosForUser());

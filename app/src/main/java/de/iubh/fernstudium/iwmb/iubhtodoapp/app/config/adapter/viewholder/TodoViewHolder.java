@@ -1,7 +1,6 @@
 package de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.adapter.viewholder;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.databinding.TodoItemBinding;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo;

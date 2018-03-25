@@ -1,6 +1,7 @@
 package de.iubh.fernstudium.iwmb.iubhtodoapp.app.config;
 
 import android.app.Application;
+import android.content.res.Resources;
 import android.os.StrictMode;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.DBUtil;
@@ -14,11 +15,13 @@ import io.requery.sql.EntityDataStore;
 
 public class TodoApplication extends Application {
 
+    public static Resources resources;
     private ReactiveEntityStore<Persistable> dataStore;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        resources = getResources();
         StrictMode.enableDefaults();
     }
 
