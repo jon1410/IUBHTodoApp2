@@ -28,4 +28,12 @@
     <string name="status_in_progress">in Arbeit</string>
     <string name="status_done">abgeschlossen</string>
 
+    <string name="newTodo_Button">neues Todo</string>
+    <string name="your_todos">Deine Todos</string>
+    <string name="title_activity_new_todo_activity">new_todo_activity</string>
+    <string name="new_todo_title">Erstelle ein neues Todo</string>
+    <string name="todo_title">Titel des Todo</string>
+    <string name="todo_desc">Beschreibung</string>
+    <string name="todo_dueDate">Erledigen bis..</string>
+
 </resources>

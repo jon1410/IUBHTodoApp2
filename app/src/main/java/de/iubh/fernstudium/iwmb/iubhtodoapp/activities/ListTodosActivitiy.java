@@ -5,6 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -29,7 +33,7 @@ public class ListTodosActivitiy extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         todoDBService = new TodoDBService(getDataStore());
 
-        getSupportActionBar().setTitle("Test");
+        getSupportActionBar().setTitle(getString(R.string.your_todos));
         setContentView(R.layout.list_todo_activity);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         currentUser = getIntent().getStringExtra(Constants.CURR_USER_KEY);
@@ -40,10 +44,30 @@ public class ListTodosActivitiy extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.addTodo:
+                //TODO: startActivity
+                Toast.makeText(this, "add new Todo clicked!", Toast.LENGTH_LONG).show();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(menuItem);
+    }
+
+    @Override
     protected void onResume() {
-        if(todoAdapter == null){
+        if (todoAdapter == null) {
             todoAdapter = new TodoAdapter(getTodosForUser());
-        }else{
+        } else {
             todoAdapter.setTodos(getTodosForUser());
         }
         super.onResume();
@@ -55,11 +79,11 @@ public class ListTodosActivitiy extends AppCompatActivity {
         todoAdapter = null;
     }
 
-    private List<Todo> getTodosForUser(){
+    private List<Todo> getTodosForUser() {
         return todoDBService.getTodosAsListForUser(currentUser);
     }
 
-    private ReactiveEntityStore<Persistable> getDataStore(){
+    private ReactiveEntityStore<Persistable> getDataStore() {
         return ((TodoApplication) getApplication()).getDataStore();
     }
 }
