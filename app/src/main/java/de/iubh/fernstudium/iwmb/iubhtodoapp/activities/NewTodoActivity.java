@@ -58,8 +58,8 @@ public class NewTodoActivity extends AppCompatActivity implements DatePickerDial
         boolean favoriteCheckboxChecked = ((CheckBox) findViewById(R.id.toIsFavourtie)).isChecked();
 
         //TODO: check if linked to User...
-        // TODO: 15.04.2018 add favourite Flag to API...
-        todoDBService.createTodo(description, title, CalendarUtils.fromStringToCalendar(dueDate), currentUser);
+        todoDBService.createTodo(description, title, CalendarUtils.fromStringToCalendar(dueDate),
+                currentUser, favoriteCheckboxChecked);
     }
 
     @Override

@@ -33,13 +33,13 @@ public class TodoDBService {
         this.dataStore = dataStore;
     }
 
-    public Todo createTodo(String description, String title, Calendar dueDate, User assignee){
+    public Todo createTodo(String description, String title, Calendar dueDate, User assignee, boolean isFavourite){
         TodoEntity todoEntity = new TodoEntity();
         todoEntity.setDescription(description);
         todoEntity.setTitle(title);
         todoEntity.setDueDate(new Timestamp(dueDate.getTime().getTime()));
         todoEntity.setStatus(TodoStatus.OPEN);
-        todoEntity.setFavoriteFlag(false);
+        todoEntity.setFavoriteFlag(isFavourite);
         todoEntity.setUser(assignee);
 
         return dataStore.toBlocking().insert(todoEntity);
@@ -47,7 +47,12 @@ public class TodoDBService {
 
     public Todo createTodo(String description, String title, Calendar dueDate, String assignee){
         UserEntity user = dataStore.toBlocking().findByKey(UserEntity.class, assignee);
-        return createTodo(description, title, dueDate, user);
+        return createTodo(description, title, dueDate, user, false);
+    }
+
+    public Todo createTodo(String description, String title, Calendar dueDate, String assignee, boolean isFavourite){
+        UserEntity user = dataStore.toBlocking().findByKey(UserEntity.class, assignee);
+        return createTodo(description, title, dueDate, user, isFavourite);
     }
 
     public boolean deleteTodo(int id){
@@ -55,7 +60,7 @@ public class TodoDBService {
         if(todoEntity == null){
             return false;
         }
-        dataStore.delete(todoEntity);
+        dataStore.toBlocking().delete(todoEntity);
         return true;
     }
 
@@ -70,7 +75,7 @@ public class TodoDBService {
             return false;
         }
         todoEntity.setFavoriteFlag(true);
-        dataStore.update(todoEntity);
+        dataStore.toBlocking().update(todoEntity);
         return true;
     }
 
