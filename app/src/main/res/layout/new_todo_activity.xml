@@ -23,7 +23,7 @@
             android:layout_marginTop="16dp"
             android:ems="10"
             android:inputType="text"
-            android:text="@string/todo_title"
+            android:hint="@string/todo_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,13 +36,13 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:focusable="false"
-            android:clickable="true"
-            android:onClick="onClickDueDate"
             android:ems="10"
-            android:inputType="textMultiLine|textPersonName"
-            android:singleLine="false"
-            android:text="@string/todo_desc"
+            android:inputType="textMultiLine"
+            android:minLines="1"
+            android:maxLines="10"
+            android:scrollbars="vertical"
+            android:hint="@string/todo_desc"
+            android:gravity="left|top"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/todoTitle" />
@@ -55,10 +55,48 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:ems="10"
+            android:hint="@string/todo_dueDate"
             android:inputType="date"
-            android:text="@string/todo_dueDate"
+            android:onClick="onClickDueDate"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/todoDesc" />
+
+        <CheckBox
+            android:id="@+id/toIsFavourtie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/todo_isFavorite"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/todoDueDate" />
+
+        <AutoCompleteTextView
+            android:id="@+id/addContactToToDoAutoCompleteTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:completionHint="@string/todo_clickToShowContacts"
+            android:hint="@string/todo_linkToContact"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toIsFavourtie" />
+
+        <Button
+            android:id="@+id/buttonCreateNewTodo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:onClick="onClickCreateNewTodo"
+            android:text="@string/todo_buttonCreate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addContactToToDoAutoCompleteTextView" />
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

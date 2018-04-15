@@ -1,5 +1,6 @@
 package de.iubh.fernstudium.iwmb.iubhtodoapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -54,8 +55,10 @@ public class ListTodosActivitiy extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.addTodo:
-                //TODO: startActivity
                 Toast.makeText(this, "add new Todo clicked!", Toast.LENGTH_LONG).show();
+                Intent newTodoActivityIntent = new Intent(this, NewTodoActivity.class);
+                newTodoActivityIntent.putExtra(Constants.CURR_USER_KEY, currentUser);
+                startActivity(newTodoActivityIntent);
                 break;
             default:
                 break;
