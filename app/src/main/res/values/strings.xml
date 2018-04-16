@@ -40,4 +40,7 @@
     <string name="todo_clickToShowContacts">Anklicken um Kontakte anzuzeigen...</string>
     <string name="todo_buttonCreate">Neues Todo erstellen</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

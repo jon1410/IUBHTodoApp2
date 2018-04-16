@@ -1,6 +1,9 @@
 package de.iubh.fernstudium.iwmb.iubhtodoapp;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
+
+import java.sql.Timestamp;
 
 import static org.junit.Assert.*;
 
@@ -12,6 +15,10 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+        DateTime jodaDate = DateTime.now().withTimeAtStartOfDay();
+        Timestamp from = new Timestamp(jodaDate.toDate().getTime());
+        Timestamp to = new Timestamp(jodaDate.plusDays(1).minusSeconds(1).toDate().getTime());
+        System.out.println(from);
+        System.out.println(to);
     }
 }

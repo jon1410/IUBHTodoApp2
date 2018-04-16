@@ -1,9 +1,15 @@
 package de.iubh.fernstudium.iwmb.iubhtodoapp.db.services;
 
+import org.joda.time.DateTime;
+
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo;
@@ -83,14 +89,29 @@ public class TodoDBService {
         return dataStore.toBlocking().select(TodoEntity.class).where(TodoEntity.USER.eq(user)).get();
     }
 
+    public Result<TodoEntity> getTodosForUserAndDate(User user){
+        DateTime jodaDate = DateTime.now().withTimeAtStartOfDay();
+        Timestamp from = new Timestamp(jodaDate.toDate().getTime());
+        Timestamp to = new Timestamp(jodaDate.plusDays(1).minusSeconds(1).toDate().getTime());
+        return dataStore.toBlocking().select(TodoEntity.class).where(TodoEntity.USER.eq(user)).and(TodoEntity.DUE_DATE.between(from, to)).get();
+    }
+
     public Result<TodoEntity> getTodosForUser(String userId){
-        UserEntity user = dataStore.toBlocking().findByKey(UserEntity.class, userId);
-        return this.getTodosForUser(user);
+        return this.getTodosForUser(getUser(userId));
     }
 
     public List<Todo> getTodosAsListForUser(String userId){
         Result<TodoEntity> todoEntityResult = this.getTodosForUser(userId);
         return new ArrayList<Todo>(todoEntityResult.toList());
+    }
+
+    public List<Todo> getTodosAsListForUserAndCurrentDate(String userId){
+        Result<TodoEntity> todoEntityResult = this.getTodosForUserAndDate(getUser(userId));
+        return new ArrayList<Todo>(todoEntityResult.toList());
+    }
+
+    private User getUser(String userId){
+        return dataStore.toBlocking().findByKey(UserEntity.class, userId);
     }
 
 }
