@@ -8,10 +8,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +26,15 @@ import java.util.List;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.TodoSorter;
 
-public class OverviewActivity extends AppCompatActivity implements ListTodosFragment.OnListFragmentInteractionListener {
+public class OverviewActivity extends AppCompatActivity implements ListTodosFragment.OnListFragmentInteractionListener, AdapterView.OnItemSelectedListener {
 
     String currentUser;
+    ListTodosFragment fragmentTodosForToday;
+    ListTodosFragment fragmentAllTodos;
+    ViewPagerAdapter adapter;
+    ViewPager viewPager;
 
     @Override
     public void onCreate(Bundle savedInstance){
@@ -31,18 +43,20 @@ public class OverviewActivity extends AppCompatActivity implements ListTodosFrag
 
         currentUser = getIntent().getStringExtra(Constants.CURR_USER_KEY);
 
-        ViewPager viewPager = findViewById(R.id.pager);
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPager = findViewById(R.id.pager);
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        ListTodosFragment fragmentTodosForToday = new ListTodosFragment();
+        fragmentTodosForToday = new ListTodosFragment();
         Bundle bundleForTodosForToday = new Bundle();
         bundleForTodosForToday.putString(Constants.CURR_USER_KEY, currentUser);
+        bundleForTodosForToday.putString(Constants.ORDER_BY_KEY, Constants.ORDER_BY_DATE);
         bundleForTodosForToday.putBoolean(Constants.SHOW_TODOS_FOR_TODAY_KEY, true);
         fragmentTodosForToday.setArguments(bundleForTodosForToday);
 
-        ListTodosFragment fragmentAllTodos = new ListTodosFragment();
+        fragmentAllTodos = new ListTodosFragment();
         Bundle bundleForAllTodos = new Bundle();
         bundleForAllTodos.putString(Constants.CURR_USER_KEY, currentUser);
+        bundleForTodosForToday.putString(Constants.ORDER_BY_KEY, Constants.ORDER_BY_DATE);
         bundleForAllTodos.putBoolean(Constants.SHOW_TODOS_FOR_TODAY_KEY, false);
         fragmentAllTodos.setArguments(bundleForAllTodos);
 
@@ -59,6 +73,15 @@ public class OverviewActivity extends AppCompatActivity implements ListTodosFrag
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+        MenuItem item = menu.findItem(R.id.sortTodosSpinner);
+        Spinner sortSpinner = (Spinner) item.getActionView();
+
+        ArrayAdapter<CharSequence> dropDownValuesAdapter = ArrayAdapter.createFromResource(this,
+                R.array.spinnerDropdown, android.R.layout.simple_spinner_item);
+        dropDownValuesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortSpinner.setAdapter(dropDownValuesAdapter);
+        sortSpinner.setOnItemSelectedListener(this);
+        dropDownValuesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -80,6 +103,44 @@ public class OverviewActivity extends AppCompatActivity implements ListTodosFrag
     @Override
     public void onListFragmentInteraction(Todo todo) {
         Toast.makeText(this, "selected an ITEM", Toast.LENGTH_LONG).show();
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String value = parent.getItemAtPosition(position).toString();
+        int index = viewPager.getCurrentItem();
+        ListTodosFragment currentFragment = (ListTodosFragment) adapter.getItem(index);
+        List<Todo> sortedTodos = sortTodos(currentFragment.getTodos(), value);
+        currentFragment.updateTodos(sortedTodos);
+    }
+
+    private List<Todo> sortTodos(List<Todo> todos, String sortBy) {
+        List<Todo> sortedTodos;
+
+        if(TextUtils.isEmpty(sortBy)){
+            return todos;
+        }
+
+        if(Constants.ORDER_BY_FAV.equalsIgnoreCase(sortBy)){
+            sortedTodos = TodoSorter.sortTodosByFavoriteFlag(todos);
+        }else if(Constants.ORDER_BY_STATUS.equalsIgnoreCase(sortBy)){
+            sortedTodos = TodoSorter.sortTodosByStatus(todos);
+        }else if(Constants.ORDER_BY_DATE.equalsIgnoreCase(sortBy)){
+            sortedTodos = TodoSorter.sortTodosByDueDate(todos);
+        }else if(sortBy.startsWith(Constants.ORDER_BY_DB)){
+            sortedTodos = TodoSorter.sortTodosById(todos);
+        }
+        else{
+            sortedTodos = todos;
+        }
+
+        return sortedTodos;
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        Toast.makeText(parent.getContext(), "Nothing clicked!", Toast.LENGTH_LONG).show();
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -110,5 +171,6 @@ public class OverviewActivity extends AppCompatActivity implements ListTodosFrag
             return fragmentTitleList.get(position);
         }
     }
+
 }
 

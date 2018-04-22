@@ -7,5 +7,13 @@
         android:id="@+id/addTodo"
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/newTodo_Button"
-        app:showAsAction="ifRoom"/>
+        android:tooltipText="@string/newTodo_Button"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/sortTodosSpinner"
+        app:actionViewClass="android.widget.Spinner"
+        android:title="@string/sort_Todos"
+        android:tooltipText="@string/sort_Todos"
+        app:showAsAction="always"/>
 </menu>

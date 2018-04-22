@@ -3,8 +3,10 @@ package de.iubh.fernstudium.iwmb.iubhtodoapp.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,7 @@ public class ListTodosFragment extends Fragment {
     TodoDBService todoDBService;
     String currentUser;
     boolean onlyTodosForCurrentDate;
+    String orderBy;
     List<Todo> todos;
 
     private OnListFragmentInteractionListener fragmentInteractionListener;
@@ -39,6 +42,7 @@ public class ListTodosFragment extends Fragment {
         super.onCreate(savedInstanceState);
         currentUser = getArguments().getString(Constants.CURR_USER_KEY);
         onlyTodosForCurrentDate = getArguments().getBoolean(Constants.SHOW_TODOS_FOR_TODAY_KEY);
+        orderBy = getArguments().getString(Constants.ORDER_BY_KEY);
         todoDBService = new TodoDBService(getDataStore());
         todos = getTodosForUser(onlyTodosForCurrentDate);
     }
@@ -49,7 +53,7 @@ public class ListTodosFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.list_todo_fragment, container, false);
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerViewListTodoFragment);
 
-        todoAdapter = new TodoAdapter(getTodosForUser(onlyTodosForCurrentDate));
+        todoAdapter = new TodoAdapter(todos);
         recyclerView.setAdapter(todoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return rootView;
@@ -64,6 +68,24 @@ public class ListTodosFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
+    }
+
+    public List<Todo> getTodos() {
+        return todos;
+    }
+
+    public void updateTodos(List<Todo> sortedTodos){
+        Log.v("settingTodos" , sortedTodos.toString());
+        todoAdapter = new TodoAdapter(sortedTodos);
+        todoAdapter.notifyDataSetChanged();
+        reloadFragment();
+    }
+
+    private void reloadFragment() {
+        FragmentTransaction fragmentTransaction = (getActivity()).getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.detach(this);
+        fragmentTransaction.attach(this);
+        fragmentTransaction.commit();
     }
 
     private ReactiveEntityStore<Persistable> getDataStore() {

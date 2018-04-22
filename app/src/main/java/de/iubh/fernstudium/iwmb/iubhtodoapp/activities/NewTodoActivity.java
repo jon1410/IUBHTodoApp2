@@ -1,6 +1,7 @@
 package de.iubh.fernstudium.iwmb.iubhtodoapp.activities;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -54,12 +55,16 @@ public class NewTodoActivity extends AppCompatActivity implements DatePickerDial
         Toast.makeText(this, "Create New Todo Button clicked...!", Toast.LENGTH_LONG).show();
         String title = ((EditText) findViewById(R.id.todoTitle)).getText().toString();
         String description = ((EditText) findViewById(R.id.todoDesc)).getText().toString();
-        String dueDate = ((EditText) findViewById(R.id.todoTitle)).getText().toString();
+        String dueDate = ((EditText) findViewById(R.id.todoDueDate)).getText().toString();
         boolean favoriteCheckboxChecked = ((CheckBox) findViewById(R.id.toIsFavourtie)).isChecked();
 
         //TODO: check if linked to User...
         todoDBService.createTodo(description, title, CalendarUtils.fromStringToCalendar(dueDate),
                 currentUser, favoriteCheckboxChecked);
+
+        Intent intent = new Intent(this, OverviewActivity.class);
+        intent.putExtra(Constants.CURR_USER_KEY, currentUser);
+        startActivity(intent);
     }
 
     @Override

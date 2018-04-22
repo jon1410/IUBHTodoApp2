@@ -1,23 +1,22 @@
 package de.iubh.fernstudium.iwmb.iubhtodoapp.db.services;
 
+import android.text.TextUtils;
+
 import org.joda.time.DateTime;
 
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
+import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.TodoEntity;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.User;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.UserEntity;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.TodoStatus;
 import io.requery.Persistable;
+import io.requery.query.OrderingExpression;
 import io.requery.query.Result;
 import io.requery.reactivex.ReactiveEntityStore;
 import io.requery.reactivex.ReactiveSupport;

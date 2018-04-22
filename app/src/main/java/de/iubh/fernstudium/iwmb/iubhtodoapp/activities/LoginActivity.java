@@ -21,7 +21,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
@@ -41,6 +43,7 @@ import java.util.List;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.TodoApplication;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.User;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.services.TodoDBService;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.services.UserDBService;
@@ -250,7 +253,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } catch (UserNotFoundException e) {
             userDBService.createUser(adminUser, "admin");
             for (int i=0; i<=1; i++){
-                todoDBService.createTodo("Test-Todo " + i, "Todo-Title " + i, Calendar.getInstance(), adminUser);
+                if(i==3){
+                    Log.v("TODOFAV", "creating Todo with Favorite");
+                    Todo t = todoDBService.createTodo("Test-Todo " + i, "Todo-Title " + i, Calendar.getInstance(), adminUser, true);
+                    Log.v("TODOFAVIS", "Favorite-Flag: " + t.getFavoriteFlag());
+                }else{
+                    todoDBService.createTodo("Test-Todo " + i, "Todo-Title " + i, Calendar.getInstance(), adminUser);
+                }
             }
         }
 
