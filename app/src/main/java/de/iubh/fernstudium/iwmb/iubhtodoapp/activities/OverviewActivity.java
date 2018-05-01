@@ -18,8 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +26,7 @@ import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.TodoSorter;
 
-public class OverviewActivity extends AppCompatActivity implements ListTodosFragment.OnListFragmentInteractionListener, AdapterView.OnItemSelectedListener {
+public class OverviewActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     String currentUser;
     ListTodosFragment fragmentTodosForToday;
@@ -98,12 +96,6 @@ public class OverviewActivity extends AppCompatActivity implements ListTodosFrag
                 break;
         }
         return super.onOptionsItemSelected(menuItem);
-    }
-
-    @Override
-    public void onListFragmentInteraction(Todo todo) {
-        Toast.makeText(this, "selected an ITEM", Toast.LENGTH_LONG).show();
-
     }
 
     @Override

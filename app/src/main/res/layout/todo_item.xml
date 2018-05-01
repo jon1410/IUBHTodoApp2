@@ -29,11 +29,16 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/title"
             app:todoStatus="@{todo.status}"/>
-        
-        <RadioButton android:id="@+id/fav"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:onClick="toggleFavorite"/>
+
+            <RadioButton
+                android:id="@+id/fav"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/custom_radio_favourtie"
+                android:button="@android:color/transparent"
+                android:checked="@{todo.favoriteFlag}"/>
+
     </RelativeLayout>
 </layout>

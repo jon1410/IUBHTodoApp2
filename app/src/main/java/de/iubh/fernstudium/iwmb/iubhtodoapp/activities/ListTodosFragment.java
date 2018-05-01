@@ -1,6 +1,6 @@
 package de.iubh.fernstudium.iwmb.iubhtodoapp.activities;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -10,10 +10,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.List;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.activities.listener.RecyclerViewItemClickListener;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.TodoApplication;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.adapter.TodoAdapter;
@@ -22,7 +24,7 @@ import de.iubh.fernstudium.iwmb.iubhtodoapp.db.services.TodoDBService;
 import io.requery.Persistable;
 import io.requery.reactivex.ReactiveEntityStore;
 
-public class ListTodosFragment extends Fragment {
+public class ListTodosFragment extends Fragment implements RecyclerViewItemClickListener.OnItemClickListener {
 
     TodoAdapter todoAdapter;
     TodoDBService todoDBService;
@@ -30,12 +32,6 @@ public class ListTodosFragment extends Fragment {
     boolean onlyTodosForCurrentDate;
     String orderBy;
     List<Todo> todos;
-
-    private OnListFragmentInteractionListener fragmentInteractionListener;
-
-    public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Todo todo);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,29 +52,33 @@ public class ListTodosFragment extends Fragment {
         todoAdapter = new TodoAdapter(todos);
         recyclerView.setAdapter(todoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(rootView.getContext(), recyclerView, this));
         return rootView;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            fragmentInteractionListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
     }
 
     public List<Todo> getTodos() {
         return todos;
     }
 
-    public void updateTodos(List<Todo> sortedTodos){
-        Log.v("settingTodos" , sortedTodos.toString());
+    public void updateTodos(List<Todo> sortedTodos) {
+        Log.v("settingTodos", sortedTodos.toString());
         todoAdapter = new TodoAdapter(sortedTodos);
         todoAdapter.notifyDataSetChanged();
         reloadFragment();
+    }
+
+    @Override
+    public void onClick(View view, int position) {
+        Toast.makeText(view.getContext(), "Clicked Item on Position: " + position, Toast.LENGTH_SHORT).show();
+        Intent detailIntent = new Intent(this.getContext(), TodoDetailActivity.class);
+        detailIntent.putExtra(Constants.SEL_TODO_KEY, todos.get(position));
+        startActivity(detailIntent);
+    }
+
+    @Override
+    public void onLongClick(View view, int position) {
+        //TODO: create Dialog
+        Toast.makeText(view.getContext(), "Long Click Item on Position: " + position, Toast.LENGTH_LONG).show();
     }
 
     private void reloadFragment() {
@@ -93,7 +93,7 @@ public class ListTodosFragment extends Fragment {
     }
 
     private List<Todo> getTodosForUser(boolean onlyTodosForCurrentDate) {
-        if(onlyTodosForCurrentDate){
+        if (onlyTodosForCurrentDate) {
             return todoDBService.getTodosAsListForUserAndCurrentDate(currentUser);
         }
         return todoDBService.getTodosAsListForUser(currentUser);

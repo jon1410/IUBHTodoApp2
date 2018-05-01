@@ -11,7 +11,7 @@ import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo;
 
 public class TodoViewHolder extends RecyclerView.ViewHolder {
 
-    private final TodoItemBinding binding;
+    private TodoItemBinding binding;
 
     public TodoViewHolder(TodoItemBinding binding) {
         super(binding.getRoot());

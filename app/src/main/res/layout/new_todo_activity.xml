@@ -10,8 +10,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/editText"
-        app:layout_constraintTop_toTopOf="@+id/editText"
+        app:layout_constraintBottom_toTopOf="@+id/idStatusDetailContent"
+        app:layout_constraintTop_toTopOf="@+id/idStatusDetailContent"
         tools:context=".activities.NewTodoActivity">
 
         <EditText

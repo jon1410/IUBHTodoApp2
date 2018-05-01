@@ -41,6 +41,15 @@
     <string name="todo_clickToShowContacts">Anklicken um Kontakte anzuzeigen...</string>
     <string name="todo_buttonCreate">Neues Todo erstellen</string>
 
+    <string name="todo_title_short">Titel:</string>
+    <string name="todo_desc_short">Beschreibung:</string>
+    <string name="todo_status_short">Status:</string>
+    <string name="todo_dueDate_short">Erledigen bis:</string>
+    <string name="todo_fav_short">Favorit:</string>
+    <string name="todo_linkedTo_short">Verknüpft mit:</string>
+    <string name="todo_btnSaveChanges">Änderungen \nspeichern</string>
+    <string name="todo_btnbackToOverview">Zurück zu\n Übersicht</string>
+
     <string-array name="spinnerDropdown">
         <item>Sortieren nach..</item>
         <item>Datum</item>

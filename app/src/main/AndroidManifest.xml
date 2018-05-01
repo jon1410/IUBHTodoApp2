@@ -24,11 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.ListTodosActivitiy"
-            android:label="@string/title_activity_list_todos_activitiy" />
         <activity android:name=".activities.NewTodoActivity" />
         <activity android:name=".activities.OverviewActivity" />
+        <activity android:name=".activities.TodoDetailActivity" />
     </application>
 
 </manifest>

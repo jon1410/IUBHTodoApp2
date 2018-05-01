@@ -4,6 +4,10 @@ import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.ToggleButton;
 
 import java.util.List;
 
@@ -19,6 +23,7 @@ import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo;
 public class TodoAdapter extends RecyclerView.Adapter<TodoViewHolder> {
 
     List<Todo> todos;
+    private TodoViewHolder viewHolder;
 
     public TodoAdapter(List<Todo> todos) {
         this.todos = todos;
@@ -28,7 +33,8 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoViewHolder> {
     public TodoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         TodoItemBinding itemBinding = DataBindingUtil.inflate(layoutInflater,  R.layout.todo_item, parent, false);
-        return new TodoViewHolder(itemBinding);
+        viewHolder = new TodoViewHolder(itemBinding);
+        return viewHolder;
     }
 
     @Override
