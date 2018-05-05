@@ -105,6 +105,7 @@
         android:ems="10"
         android:inputType="date"
         android:textSize="18sp"
+        android:onClick="onClickDueDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/idDueDateDetail"
         app:layout_constraintTop_toBottomOf="@+id/idStatusDetailContent" />
@@ -120,15 +121,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/idDueDateDetailContent" />
 
-    <RadioButton
+    <ToggleButton
         android:id="@+id/idFavDetailButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/custom_radio_favourtie"
         android:button="@android:color/transparent"
-        android:checked="false"
+        android:textOff=""
+        android:textOn=""
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/idFavDetail"
         app:layout_constraintTop_toBottomOf="@+id/idDueDateDetailContent" />
@@ -166,6 +168,7 @@
         android:layout_marginTop="32dp"
         android:text="@string/todo_btnbackToOverview"
         android:textSize="18sp"
+        android:onClick="onClickReturn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/idLinkedToDetailContent" />
 
