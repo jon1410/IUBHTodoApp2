@@ -1,4 +1,4 @@
-package de.iubh.fernstudium.iwmb.iubhtodoapp.dialogs;
+package de.iubh.fernstudium.iwmb.iubhtodoapp.activities.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

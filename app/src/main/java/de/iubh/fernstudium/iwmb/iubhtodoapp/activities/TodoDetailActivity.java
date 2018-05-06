@@ -9,7 +9,6 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.ToggleButton;
 
 import java.util.Calendar;
@@ -17,17 +16,23 @@ import java.util.Date;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.TodoApplication;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.dialogs.DatePickerFragment;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.db.services.TodoDBService;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.activities.dialogs.DatePickerFragment;
+import io.requery.Persistable;
+import io.requery.reactivex.ReactiveEntityStore;
 
 public class TodoDetailActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private Todo selectedTodo;
     private boolean favStatus;
+    private TodoDBService todoDBService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        todoDBService = new TodoDBService(getDataStore());
         setContentView(R.layout.todo_detail_activity);
         selectedTodo = getIntent().getParcelableExtra(Constants.SEL_TODO_KEY);
         populateView();
@@ -51,7 +56,12 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     }
 
     public void onClickSaveChanges(View view){
-        //TODO: save
+        String title = ((EditText) findViewById(R.id.idTitleDetailContent)).getText().toString();
+        String description =((EditText) findViewById(R.id.idDescContent)).getText().toString();
+        EditText statusEdt = findViewById(R.id.idStatusDetailContent);
+        EditText dueDateEdt = findViewById(R.id.idDueDateDetailContent);
+        ToggleButton favouriteBtn = findViewById(R.id.idFavDetailButton);
+        //TODO: finish
     }
 
     @Override
@@ -76,6 +86,10 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
         favStatus = selectedTodo.getFavoriteFlag();
         favouriteBtn.setChecked(favStatus);
         //TODO: add Link to Contact in TODO
+    }
+
+    private ReactiveEntityStore<Persistable> getDataStore() {
+        return ((TodoApplication) getApplication()).getDataStore();
     }
 
 }

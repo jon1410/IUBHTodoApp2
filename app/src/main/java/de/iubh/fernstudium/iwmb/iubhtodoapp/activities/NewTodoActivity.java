@@ -5,26 +5,19 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.sql.Timestamp;
 import java.util.Calendar;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.TodoApplication;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.TodoEntity;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.User;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.services.TodoDBService;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.db.services.UserDBService;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.dialogs.DatePickerFragment;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.TodoStatus;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.exceptions.UserNotFoundException;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.activities.dialogs.DatePickerFragment;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.CalendarUtils;
 import io.requery.Persistable;
 import io.requery.reactivex.ReactiveEntityStore;

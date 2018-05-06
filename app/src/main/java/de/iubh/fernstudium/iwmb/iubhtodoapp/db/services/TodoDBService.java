@@ -60,6 +60,21 @@ public class TodoDBService {
         return createTodo(description, title, dueDate, user, isFavourite);
     }
 
+    public Todo changeTodo(int idToUpdate, Todo todoValues){
+        TodoEntity todoEntity = (TodoEntity) getTodo(idToUpdate);
+        if(todoEntity == null){
+            return null;
+        }
+
+        todoEntity.setDueDate(todoValues.getDueDate());
+        todoEntity.setStatus(todoValues.getStatus());
+        todoEntity.setDescription(todoValues.getDescription());
+        todoEntity.setTitle(todoValues.getTitle());
+        todoEntity.setFavoriteFlag(todoValues.getFavoriteFlag());
+
+        return dataStore.toBlocking().update(todoEntity);
+    }
+
     public boolean deleteTodo(int id){
         TodoEntity todoEntity = (TodoEntity) getTodo(id);
         if(todoEntity == null){

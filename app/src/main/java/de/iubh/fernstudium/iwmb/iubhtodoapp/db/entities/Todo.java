@@ -41,6 +41,9 @@ public interface Todo extends Persistable, Observable, Parcelable {
     @Bindable
     Boolean getFavoriteFlag();
 
+    @Bindable
+    int getContactId();
+
     @ManyToOne
     User getUser();
 
