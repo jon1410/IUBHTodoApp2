@@ -21,7 +21,7 @@ public class DBUtil {
     public static ReactiveEntityStore<Persistable> createReactiveEntityStore(Context context) {
         ReactiveEntityStore<Persistable> dataStore;
         // override onUpgrade to handle migrating to a new version
-        DatabaseSource source = new DatabaseSource(context, Models.DEFAULT, 1);
+        DatabaseSource source = new DatabaseSource(context, Models.DEFAULT, 2);
 
         if (BuildConfig.DEBUG) {
             // use this in development mode to drop and recreate the tables on every upgrade
