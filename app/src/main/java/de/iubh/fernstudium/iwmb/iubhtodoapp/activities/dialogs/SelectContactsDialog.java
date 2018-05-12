@@ -10,12 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
-import java.util.Arrays;
 import java.util.List;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.adapter.ContactAdapter;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.ContactDTO;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.contact.ContactDTO;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.ContactUtils;
 
 public class SelectContactsDialog extends DialogFragment {
 
@@ -46,7 +46,6 @@ public class SelectContactsDialog extends DialogFragment {
 
 
     private List<ContactDTO> loadContacts() {
-        //TODO: implement Contact Provider
-        return Arrays.asList(new ContactDTO(1, "Name 1"), new ContactDTO(2, "Name 2"));
+        return ContactUtils.getContacts();
     }
 }

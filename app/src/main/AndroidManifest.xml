@@ -27,6 +27,10 @@
         <activity android:name=".activities.NewTodoActivity" />
         <activity android:name=".activities.OverviewActivity" />
         <activity android:name=".activities.TodoDetailActivity" />
+
+        <service
+            android:name=".app.config.ContactLoaderIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

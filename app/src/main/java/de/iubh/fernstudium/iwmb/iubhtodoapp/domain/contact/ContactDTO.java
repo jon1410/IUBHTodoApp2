@@ -1,4 +1,4 @@
-package de.iubh.fernstudium.iwmb.iubhtodoapp.domain;
+package de.iubh.fernstudium.iwmb.iubhtodoapp.domain.contact;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
@@ -9,13 +9,15 @@ public class ContactDTO extends BaseObservable {
 
     private int id;
     private String name;
+    private String email;
 
     public ContactDTO() {
     }
 
-    public ContactDTO(int id, String name) {
+    public ContactDTO(int id, String name, String email) {
         this.id = id;
         this.name = name;
+        this.email = email;
     }
 
     public int getId() {
@@ -35,18 +37,28 @@ public class ContactDTO extends BaseObservable {
         this.name = name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ContactDTO that = (ContactDTO) o;
         return id == that.id &&
-                Objects.equals(name, that.name);
+                Objects.equals(name, that.name) &&
+                Objects.equals(email, that.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+
+        return Objects.hash(id, name, email);
     }
 
     @Override
@@ -54,6 +66,7 @@ public class ContactDTO extends BaseObservable {
         return "ContactDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
                 '}';
     }
 }

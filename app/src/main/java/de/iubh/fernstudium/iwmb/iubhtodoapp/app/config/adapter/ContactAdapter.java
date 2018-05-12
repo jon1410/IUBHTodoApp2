@@ -14,7 +14,7 @@ import java.util.List;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.adapter.viewholder.ContactViewHolder;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.databinding.ContactItemBinding;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.ContactDTO;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.contact.ContactDTO;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactViewHolder> implements Filterable{
 
@@ -63,6 +63,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactViewHolder> impl
                 }
                 FilterResults results = new FilterResults();
                 results.values = filteredContacts;
+                results.count = filteredContacts.size();
                 return results;
             }
 

@@ -1,4 +1,4 @@
-package de.iubh.fernstudium.iwmb.iubhtodoapp.db.service.test;
+package de.iubh.fernstudium.iwmb.iubhtodoapp.robolectric.test.db.service;
 
 import org.junit.After;
 import org.junit.Before;
@@ -10,17 +10,12 @@ import org.robolectric.annotation.Config;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.BuildConfig;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.User;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.UserEntity;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.services.UserDBService;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.exceptions.UserNotFoundException;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.DBUtil;
-import io.reactivex.Single;
 import io.requery.Persistable;
-import io.requery.query.Return;
 import io.requery.query.Scalar;
 import io.requery.reactivex.ReactiveEntityStore;
-import io.requery.reactivex.ReactiveScalar;
-import io.requery.sql.EntityDataStore;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

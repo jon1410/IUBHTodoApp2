@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.res.Resources;
 import android.os.StrictMode;
 
+import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.ContactUtils;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.DBUtil;
 import io.requery.Persistable;
 import io.requery.reactivex.ReactiveEntityStore;
@@ -22,6 +23,7 @@ public class TodoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         resources = getResources();
+        ContactLoaderIntentService.startActionLoadContacts(this);
         StrictMode.enableDefaults();
     }
 
