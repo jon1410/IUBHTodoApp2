@@ -48,17 +48,13 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
         autoCompleteTextView = findViewById(R.id.idLinkedToDetailAutoCompleteContent);
         contactListAdapter = new ContactListAdapter(this, R.layout.contact_item, ContactUtils.getContacts());
         autoCompleteTextView.setAdapter(contactListAdapter);
-        autoCompleteTextView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected  (AdapterView<?> parent, View view, int position, long id) {
-                ContactDTO contactDTO=(ContactDTO) view.getTag();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ContactDTO contactDTO= (ContactDTO) autoCompleteTextView.getAdapter().getItem(position);
                 Toast.makeText(TodoDetailActivity.this,"Clicked " + contactDTO.getName(),Toast.LENGTH_LONG).show();
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
         });
         populateView();
     }
@@ -66,7 +62,7 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_new_todo_activity, menu);
+        inflater.inflate(R.menu.todo_detail_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
