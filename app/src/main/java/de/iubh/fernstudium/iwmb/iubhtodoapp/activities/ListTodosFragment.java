@@ -77,7 +77,7 @@ public class ListTodosFragment extends Fragment implements RecyclerViewItemClick
 
     @Override
     public void onLongClick(View view, int position) {
-        //TODO: create Dialog
+        //TODO: create Dialog for Delete
         Toast.makeText(view.getContext(), "Long Click Item on Position: " + position, Toast.LENGTH_LONG).show();
     }
 

@@ -6,13 +6,6 @@ import android.content.Context;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.ContactUtils;
 
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p>
- * TODO: Customize class - update intent actions, extra parameters and static
- * helper methods.
- */
 public class ContactLoaderIntentService extends IntentService {
 
     private static final String ACTION_LOAD_CONTACTS = "de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.action.LOAD_CONTACTS";

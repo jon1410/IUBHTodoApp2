@@ -1,11 +1,15 @@
 package de.iubh.fernstudium.iwmb.iubhtodoapp.activities;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.graphics.Rect;
+import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -14,6 +18,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -51,8 +59,8 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ContactDTO contactDTO= (ContactDTO) autoCompleteTextView.getAdapter().getItem(position);
-                Toast.makeText(TodoDetailActivity.this,"Clicked " + contactDTO.getName(),Toast.LENGTH_LONG).show();
+                ContactDTO contactDTO = (ContactDTO) autoCompleteTextView.getAdapter().getItem(position);
+                Toast.makeText(TodoDetailActivity.this, "Clicked " + contactDTO.getName(), Toast.LENGTH_LONG).show();
             }
 
         });
@@ -64,6 +72,19 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.todo_detail_menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+
+        switch (menuItem.getItemId()) {
+            case R.id.idMenuMail:
+                Toast.makeText(this, "New Email clicked!", Toast.LENGTH_LONG).show();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(menuItem);
     }
 
     public void onClickDueDate(View view) {
@@ -82,7 +103,7 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
         EditText statusEdt = findViewById(R.id.idStatusDetailContent);
         EditText dueDateEdt = findViewById(R.id.idDueDateDetailContent);
         ToggleButton favouriteBtn = findViewById(R.id.idFavDetailButton);
-        //TODO: finish
+        //TODO: finish call DB-Service
     }
 
     @Override
@@ -91,6 +112,35 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, dayOfMonth);
         dueDateEditText.setText(DateFormat.format(Constants.DATE_FORMAT, calendar));
+    }
+
+    public void exportViewToPdf() {
+        PdfDocument document = new PdfDocument();
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(1, 1, 1)
+                .setContentRect(new Rect(0, 0, 0, 0)).create();
+
+        PdfDocument.Page page = document.startPage(pageInfo);
+        View content = getCurrentFocus().getRootView();
+        content.draw(page.getCanvas());
+
+        document.finishPage(page);
+        // write the document content
+        String fileName = constructFileName();
+        //TODO: set new FileName to TODO
+        FileOutputStream outputStream;
+        try {
+            outputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
+            document.writeTo(outputStream);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            document.close();
+        }
+    }
+
+    private String constructFileName() {
+        return selectedTodo.getId() + "_Todo_Export_" + selectedTodo.getTitle() + ".pdf";
     }
 
 

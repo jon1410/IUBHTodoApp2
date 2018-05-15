@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -16,9 +18,12 @@ import java.util.Calendar;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.TodoApplication;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.adapter.ContactListAdapter;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.services.TodoDBService;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.activities.dialogs.DatePickerFragment;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.contact.ContactDTO;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.CalendarUtils;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.ContactUtils;
 import io.requery.Persistable;
 import io.requery.reactivex.ReactiveEntityStore;
 
@@ -27,6 +32,8 @@ public class NewTodoActivity extends AppCompatActivity implements DatePickerDial
     private static final String dateFormat = "dd.MM.yyyy";
     private TodoDBService todoDBService;
     private String currentUser;
+    AutoCompleteTextView autoCompleteTextView;
+    ContactListAdapter contactListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +43,17 @@ public class NewTodoActivity extends AppCompatActivity implements DatePickerDial
         dueDateEditText.setText(DateFormat.format(dateFormat, Calendar.getInstance()));
         todoDBService = new TodoDBService(getDataStore());
         currentUser = getIntent().getStringExtra(Constants.CURR_USER_KEY);
+        autoCompleteTextView = findViewById(R.id.addContactToToDoAutoCompleteTextView);
+        contactListAdapter = new ContactListAdapter(this, R.layout.contact_item, ContactUtils.getContacts());
+        autoCompleteTextView.setAdapter(contactListAdapter);
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ContactDTO contactDTO= (ContactDTO) autoCompleteTextView.getAdapter().getItem(position);
+                Toast.makeText(NewTodoActivity.this,"Clicked " + contactDTO.getName(),Toast.LENGTH_LONG).show();
+            }
+
+        });
     }
 
     public void onClickDueDate(View view){

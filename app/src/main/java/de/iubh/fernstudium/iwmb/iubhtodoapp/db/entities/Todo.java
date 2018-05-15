@@ -44,6 +44,9 @@ public interface Todo extends Persistable, Observable, Parcelable {
     @Bindable
     int getContactId();
 
+    @Bindable
+    String getFileName();
+
     @ManyToOne
     User getUser();
 

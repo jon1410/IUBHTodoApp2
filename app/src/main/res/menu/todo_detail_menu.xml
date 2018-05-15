@@ -3,6 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/idMenuPdf"
+        android:icon="@drawable/pdf_export"
+        android:title="Mail"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/idMenuMail"
         android:icon="@android:drawable/ic_dialog_email"
         android:title="Mail"
