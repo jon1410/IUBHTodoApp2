@@ -1,12 +1,17 @@
 package de.iubh.fernstudium.iwmb.iubhtodoapp.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.pdf.PdfDocument;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,19 +20,15 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.activities.dialogs.SelectContactsDialog;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.TodoApplication;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.adapter.ContactListAdapter;
@@ -36,6 +37,7 @@ import de.iubh.fernstudium.iwmb.iubhtodoapp.db.services.TodoDBService;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.activities.dialogs.DatePickerFragment;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.contact.ContactDTO;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.ContactUtils;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.ITextUtil;
 import io.requery.Persistable;
 import io.requery.reactivex.ReactiveEntityStore;
 
@@ -44,14 +46,18 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     private Todo selectedTodo;
     private boolean favStatus;
     private TodoDBService todoDBService;
+    private ITextUtil iTextUtil;
+    private ProgressBar progressBar;
     AutoCompleteTextView autoCompleteTextView;
     ContactListAdapter contactListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        iTextUtil = new ITextUtil();
         todoDBService = new TodoDBService(getDataStore());
         setContentView(R.layout.todo_detail_activity);
+        progressBar = findViewById(R.id.detailProgress);
         selectedTodo = getIntent().getParcelableExtra(Constants.SEL_TODO_KEY);
         autoCompleteTextView = findViewById(R.id.idLinkedToDetailAutoCompleteContent);
         contactListAdapter = new ContactListAdapter(this, R.layout.contact_item, ContactUtils.getContacts());
@@ -80,6 +86,10 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
         switch (menuItem.getItemId()) {
             case R.id.idMenuMail:
                 Toast.makeText(this, "New Email clicked!", Toast.LENGTH_LONG).show();
+                break;
+            case R.id.idMenuPdf:
+                Toast.makeText(this, "Generating PDF clicked!", Toast.LENGTH_LONG).show();
+                exportViewToPdf();
                 break;
             default:
                 break;
@@ -115,27 +125,32 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     }
 
     public void exportViewToPdf() {
-        PdfDocument document = new PdfDocument();
-        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(1, 1, 1)
-                .setContentRect(new Rect(0, 0, 0, 0)).create();
-
-        PdfDocument.Page page = document.startPage(pageInfo);
-        View content = getCurrentFocus().getRootView();
-        content.draw(page.getCanvas());
-
-        document.finishPage(page);
-        // write the document content
+        showProgressBar(true);
         String fileName = constructFileName();
-        //TODO: set new FileName to TODO
-        FileOutputStream outputStream;
+        Log.v("FILENAME.." , "Filename to write is: " + fileName);
+        String toastText = null;
         try {
-            outputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
-            document.writeTo(outputStream);
+            FileOutputStream outputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
+            boolean pdfCreated = iTextUtil.createPdfFromTodo(selectedTodo, outputStream);
+            if(pdfCreated){
+                toastText = getString(R.string.pdf_created);
+            }else{
+                toastText = getString(R.string.pdf_not_created);
+            }
             outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            document.close();
+        } catch (Exception e) {
+            Log.e("ERRORPDF","PDF could not be created....");
+        }
+        Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+        showProgressBar(false);
+    }
+
+    private void showProgressBar(boolean show) {
+        if(show){
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.bringToFront();
+        }else{
+            progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -165,7 +180,11 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     }
 
     private ReactiveEntityStore<Persistable> getDataStore() {
-        return ((TodoApplication) getApplication()).getDataStore();
+        return getCustomApplication().getDataStore();
+    }
+
+    private TodoApplication getCustomApplication(){
+        return (TodoApplication) getApplication();
     }
 
 }

@@ -50,11 +50,26 @@
     <string name="todo_btnSaveChanges">Änderungen \nspeichern</string>
     <string name="todo_btnbackToOverview">Zurück zu\n Übersicht</string>
 
+    <string name="pdf_head_Titel">Generiertes PDF für Todo</string>
+    <string name="pdf_todo_Titel">Titel des Todo: </string>
+    <string name="pdf_todo_Description_head">Beschreibung des Todo: </string>
+    <string name="pdf_todo_dueDate_head">Erledigen bis: </string>
+    <string name="pdf_linked_contact_head">Verknüpt mit: </string>
+
+    <string name="pdf_created">PDF erfolgreich erzeugt!</string>
+    <string name="pdf_not_created">PDF konnte nicht erzeugt werden.</string>
+
+    <string name="btn_next">nächste Seite</string>
+    <string name="btn_prev">vorherige Seite</string>
+
     <string-array name="spinnerDropdown">
         <item>Sortieren nach..</item>
         <item>Datum</item>
         <item>Favorit</item>
         <item>Status</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

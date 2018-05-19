@@ -10,6 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ProgressBar
+            android:id="@+id/detailProgress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="8dp"
+            android:elevation="2dp"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/idTitleDetail"
             android:layout_width="0dp"
@@ -162,8 +172,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/idLinkedToDetail"
-            app:layout_constraintTop_toBottomOf="@+id/idFavDetailButton">
-        </AutoCompleteTextView>
+            app:layout_constraintTop_toBottomOf="@+id/idFavDetailButton"></AutoCompleteTextView>
 
         <Button
             android:id="@+id/idBtnBackToOverview"

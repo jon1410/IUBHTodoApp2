@@ -1,4 +1,4 @@
-package de.iubh.fernstudium.iwmb.iubhtodoapp;
+package de.iubh.fernstudium.iwmb.iubhtodoapp.utils.unit.test;
 
 import junit.framework.Assert;
 

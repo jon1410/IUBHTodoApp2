@@ -10,6 +10,7 @@ public class Constants {
     public static final String SHOW_TODOS_FOR_TODAY_KEY = "showTodosForToday";
     public static final String ORDER_BY_KEY = "orderBy";
     public static final String SEL_TODO_KEY = "selectedTodo";
+    public static final String FILENAME_KEY = "fileName";
 
     public static final String ORDER_BY_DATE = "DATUM";
     public static final String ORDER_BY_FAV = "FAVORIT";

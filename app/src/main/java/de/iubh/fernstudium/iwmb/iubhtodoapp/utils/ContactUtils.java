@@ -20,12 +20,9 @@ public class ContactUtils {
     private static final String[] PROJECTION =
             {
                     ContactsContract.Contacts._ID,
-                    ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
-                    ContactsContract.CommonDataKinds.Email.ADDRESS
+                    ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
+                    //ContactsContract.CommonDataKinds.Email.ADDRESS
             };
-    private static Uri uri = ContactsContract.CommonDataKinds.Email.CONTENT_URI;
-            //ContactsContract.Contacts.CONTENT_URI;
-
     private static List<ContactDTO> contacts;
 
     private ContactUtils() {
@@ -35,18 +32,28 @@ public class ContactUtils {
         Log.v(TAG, "Initlizing contacts... ");
         contacts = new ArrayList<>();
         ContentResolver contentResolver = currentContext.getContentResolver();
-        ContentProviderClient contentProviderClient = contentResolver.acquireContentProviderClient(uri);
+        Cursor cr = null;
         try {
-            Cursor cr = contentProviderClient.query(uri, PROJECTION, null, null, null, null);
-            cr.moveToFirst();
-            while (!cr.isAfterLast()) {
-                contacts.add(createContactDtoFromCursorPosition(cr));
-                cr.moveToNext();
+            cr = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, PROJECTION, null, null, null, null);
+            if (cr != null && cr.moveToFirst()) {
+                do {
+                    String contactId = cr.getString(cr.getColumnIndex(ContactsContract.Contacts._ID));
+                    String name = cr.getString(cr.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
+
+                    Cursor ce = contentResolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
+                            ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?", new String[]{contactId}, null);
+                    String email = null;
+                    if (ce != null && ce.moveToFirst()) {
+                        email = ce.getString(ce.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+                        ce.close();
+                    }
+                    contacts.add(new ContactDTO(Integer.valueOf(contactId), name, email));
+                } while (cr.moveToNext());
             }
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             Log.e("ContactUtils", "Error loading Contacts");
-        }finally {
-            contentProviderClient.close();
+        } finally {
+            cr.close();
         }
         Log.v(TAG, "Finished initializing contacts... loaded: " + contacts.size());
     }
@@ -60,5 +67,22 @@ public class ContactUtils {
 
     public static List<ContactDTO> getContacts() {
         return contacts;
+    }
+
+    public static String getContactName(int contactId){
+        ContactDTO c = findContactDtoById(contactId);
+        if(c != null){
+            return c.getName();
+        }
+        return null;
+    }
+
+    private static ContactDTO findContactDtoById(int id){
+        for (ContactDTO c: contacts) {
+            if(c.getId() == id){
+                return c;
+            }
+        }
+        return null;
     }
 }
