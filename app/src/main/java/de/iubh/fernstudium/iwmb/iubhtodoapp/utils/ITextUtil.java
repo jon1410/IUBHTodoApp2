@@ -1,9 +1,7 @@
 package de.iubh.fernstudium.iwmb.iubhtodoapp.utils;
 
 import android.text.format.DateFormat;
-import android.text.format.DateUtils;
 
-import com.itextpdf.text.Anchor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
@@ -69,7 +67,7 @@ public class ITextUtil {
         if(todo.getContactId() > 0){
             String contanctName = ContactUtils.getContactName(todo.getContactId());
             if(contanctName != null){
-                preface.add(new Paragraph(getTextFromResource(R.string.pdf_todo_dueDate_head) + dueDate, titleFontSmall));
+                preface.add(new Paragraph(getTextFromResource(R.string.pdf_linked_contact_head) + contanctName, titleFontSmall));
             }
         }
         document.add(preface);

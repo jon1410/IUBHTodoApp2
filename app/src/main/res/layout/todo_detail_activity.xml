@@ -174,27 +174,44 @@
             app:layout_constraintStart_toEndOf="@+id/idLinkedToDetail"
             app:layout_constraintTop_toBottomOf="@+id/idFavDetailButton"></AutoCompleteTextView>
 
-        <Button
+        <ImageButton
             android:id="@+id/idBtnBackToOverview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
             android:onClick="onClickReturn"
+            android:src="@drawable/icon_left_holo_dark"
             android:text="@string/todo_btnbackToOverview"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/idLinkedToDetailAutoCompleteContent" />
 
-        <Button
+        <ImageButton
             android:id="@+id/idBtnSaveChanged"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="32dp"
+            android:onClick="onClickSaveChanges"
+            android:src="@drawable/icon_save_holo_dark"
             android:text="@string/todo_btnSaveChanges"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/idLinkedToDetailAutoCompleteContent" />
+
+        <ImageButton
+            android:id="@+id/idButtomShowPdf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:onClick="onClickShowPdf"
+            android:src="@drawable/icon_pdf_holo_dark"
+            android:text="PDF"
+            app:layout_constraintEnd_toStartOf="@+id/idBtnSaveChanged"
+            app:layout_constraintStart_toEndOf="@+id/idBtnBackToOverview"
             app:layout_constraintTop_toBottomOf="@+id/idLinkedToDetailAutoCompleteContent" />
 
     </android.support.constraint.ConstraintLayout>

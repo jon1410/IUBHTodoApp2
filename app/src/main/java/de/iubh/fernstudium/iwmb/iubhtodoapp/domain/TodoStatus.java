@@ -1,7 +1,5 @@
 package de.iubh.fernstudium.iwmb.iubhtodoapp.domain;
 
-import android.content.res.Resources;
-
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.TodoApplication;
 
@@ -24,5 +22,14 @@ public enum TodoStatus {
 
     public String getStatusText() {
         return statusText;
+    }
+
+    public static TodoStatus fromValue(String statusText){
+        for (TodoStatus t: TodoStatus.values()) {
+            if(t.getStatusText().equalsIgnoreCase(statusText)){
+                return t;
+            }
+        }
+        return null;
     }
 }

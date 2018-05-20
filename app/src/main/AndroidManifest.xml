@@ -28,6 +28,7 @@
         <activity android:name=".activities.NewTodoActivity" />
         <activity android:name=".activities.OverviewActivity" />
         <activity android:name=".activities.TodoDetailActivity"/>
+        <activity android:name=".activities.PDFActivity"/>
 
         <service
             android:name=".app.config.ContactLoaderIntentService"

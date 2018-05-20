@@ -62,6 +62,9 @@
     <string name="btn_next">nächste Seite</string>
     <string name="btn_prev">vorherige Seite</string>
 
+    <string name="error_change_todo">Fehler beim Speicher der Änderungen!</string>
+    <string name="ok_change_todo">Änderungen wurden erfolgreich gespeichert!</string>
+
     <string-array name="spinnerDropdown">
         <item>Sortieren nach..</item>
         <item>Datum</item>

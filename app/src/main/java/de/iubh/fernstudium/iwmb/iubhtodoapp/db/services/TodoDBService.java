@@ -1,7 +1,5 @@
 package de.iubh.fernstudium.iwmb.iubhtodoapp.db.services;
 
-import android.text.TextUtils;
-
 import org.joda.time.DateTime;
 
 import java.sql.Timestamp;
@@ -9,14 +7,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.TodoEntity;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.User;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.UserEntity;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.TodoStatus;
 import io.requery.Persistable;
-import io.requery.query.OrderingExpression;
 import io.requery.query.Result;
 import io.requery.reactivex.ReactiveEntityStore;
 import io.requery.reactivex.ReactiveSupport;
@@ -60,6 +56,12 @@ public class TodoDBService {
         return createTodo(description, title, dueDate, user, isFavourite);
     }
 
+    public Todo updateFileName(int idToUpdate, String fileName){
+        TodoEntity todoEntity = (TodoEntity) getTodo(idToUpdate);
+        todoEntity.setFileName(fileName);
+        return dataStore.toBlocking().update(todoEntity);
+    }
+
     public Todo changeTodo(int idToUpdate, Todo todoValues){
         TodoEntity todoEntity = (TodoEntity) getTodo(idToUpdate);
         if(todoEntity == null){
@@ -71,6 +73,8 @@ public class TodoDBService {
         todoEntity.setDescription(todoValues.getDescription());
         todoEntity.setTitle(todoValues.getTitle());
         todoEntity.setFavoriteFlag(todoValues.getFavoriteFlag());
+        todoEntity.setContactId(todoValues.getContactId());
+        todoEntity.setFileName(todoValues.getFileName());
 
         return dataStore.toBlocking().update(todoEntity);
     }

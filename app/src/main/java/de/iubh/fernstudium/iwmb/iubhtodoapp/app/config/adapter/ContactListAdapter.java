@@ -6,20 +6,15 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.activities.TodoDetailActivity;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.contact.ContactDTO;
 
 public class ContactListAdapter extends ArrayAdapter<ContactDTO> implements Filterable {

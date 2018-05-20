@@ -1,15 +1,11 @@
 package de.iubh.fernstudium.iwmb.iubhtodoapp.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.graphics.Rect;
-import android.graphics.pdf.PdfDocument;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -29,13 +26,16 @@ import java.util.Calendar;
 import java.util.Date;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.activities.dialogs.DatePickerFragment;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.TodoApplication;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.adapter.ContactListAdapter;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.TodoEntity;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.services.TodoDBService;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.activities.dialogs.DatePickerFragment;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.TodoStatus;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.contact.ContactDTO;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.CalendarUtils;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.ContactUtils;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.ITextUtil;
 import io.requery.Persistable;
@@ -48,6 +48,8 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     private TodoDBService todoDBService;
     private ITextUtil iTextUtil;
     private ProgressBar progressBar;
+    private ImageButton pdfButton;
+    private ContactDTO selectedContact;
     AutoCompleteTextView autoCompleteTextView;
     ContactListAdapter contactListAdapter;
 
@@ -58,6 +60,7 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
         todoDBService = new TodoDBService(getDataStore());
         setContentView(R.layout.todo_detail_activity);
         progressBar = findViewById(R.id.detailProgress);
+        pdfButton = findViewById(R.id.idButtomShowPdf);
         selectedTodo = getIntent().getParcelableExtra(Constants.SEL_TODO_KEY);
         autoCompleteTextView = findViewById(R.id.idLinkedToDetailAutoCompleteContent);
         contactListAdapter = new ContactListAdapter(this, R.layout.contact_item, ContactUtils.getContacts());
@@ -65,10 +68,9 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ContactDTO contactDTO = (ContactDTO) autoCompleteTextView.getAdapter().getItem(position);
-                Toast.makeText(TodoDetailActivity.this, "Clicked " + contactDTO.getName(), Toast.LENGTH_LONG).show();
+                selectedContact = (ContactDTO) autoCompleteTextView.getAdapter().getItem(position);
+                Toast.makeText(TodoDetailActivity.this, "Clicked " + selectedContact.getName(), Toast.LENGTH_LONG).show();
             }
-
         });
         populateView();
     }
@@ -110,10 +112,39 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     public void onClickSaveChanges(View view) {
         String title = ((EditText) findViewById(R.id.idTitleDetailContent)).getText().toString();
         String description = ((EditText) findViewById(R.id.idDescContent)).getText().toString();
-        EditText statusEdt = findViewById(R.id.idStatusDetailContent);
-        EditText dueDateEdt = findViewById(R.id.idDueDateDetailContent);
+        String statusEdt = ((EditText) findViewById(R.id.idStatusDetailContent)).getText().toString();
+        String dueDateEdt = ((EditText) findViewById(R.id.idDueDateDetailContent)).getText().toString();
         ToggleButton favouriteBtn = findViewById(R.id.idFavDetailButton);
-        //TODO: finish call DB-Service
+        int contactId = 0;
+        if(selectedContact != null){
+            contactId = selectedContact.getId();
+        }
+
+        TodoEntity todoEntity = new TodoEntity();
+        todoEntity.setTitle(title);
+        todoEntity.setDescription(description);
+        todoEntity.setFileName(selectedTodo.getFileName());
+        todoEntity.setStatus(TodoStatus.fromValue(statusEdt));
+        todoEntity.setDueDate(CalendarUtils.fromStringToTimestamp(dueDateEdt));
+        todoEntity.setFavoriteFlag(favouriteBtn.isChecked());
+        todoEntity.setContactId(contactId);
+
+        Todo changedTodo = todoDBService.changeTodo(selectedTodo.getId(), todoEntity);
+        String toastText = null;
+        if(changedTodo != null){
+            selectedTodo = changedTodo;
+            populateView();
+            toastText = getText(R.string.ok_change_todo).toString();
+        }else{
+            toastText = getText(R.string.error_change_todo).toString();
+        }
+        Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+    }
+
+    public void onClickShowPdf(View view){
+        Intent pdfIntent = new Intent(this, PDFActivity.class);
+        pdfIntent.putExtra(Constants.FILENAME_KEY, selectedTodo.getFileName());
+        startActivity(pdfIntent);
     }
 
     @Override
@@ -133,6 +164,9 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
             FileOutputStream outputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
             boolean pdfCreated = iTextUtil.createPdfFromTodo(selectedTodo, outputStream);
             if(pdfCreated){
+                Todo updatedTodo = todoDBService.updateFileName(selectedTodo.getId(), fileName);
+                selectedTodo = updatedTodo;
+                pdfButton.setVisibility(View.VISIBLE);
                 toastText = getString(R.string.pdf_created);
             }else{
                 toastText = getString(R.string.pdf_not_created);
@@ -171,12 +205,21 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
         ToggleButton favouriteBtn = findViewById(R.id.idFavDetailButton);
         favStatus = selectedTodo.getFavoriteFlag();
         favouriteBtn.setChecked(favStatus);
-        //TODO: add Link to Contact in TODO
+        if(TextUtils.isEmpty(selectedTodo.getFileName())){
+            pdfButton.setVisibility(View.INVISIBLE);
+        }else{
+            pdfButton.setVisibility(View.VISIBLE);
+        }
+        if(selectedTodo.getContactId() > 0){
+            String contactName = ContactUtils.getContactName(selectedTodo.getContactId());
+            if(!TextUtils.isEmpty(contactName)){
+                autoCompleteTextView.setText(contactName);
+            }
+        }
     }
 
     private void setUpAutoComplete() {
         //TODO: check permission
-
     }
 
     private ReactiveEntityStore<Persistable> getDataStore() {
@@ -186,5 +229,4 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     private TodoApplication getCustomApplication(){
         return (TodoApplication) getApplication();
     }
-
 }
