@@ -249,7 +249,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             userDBService.createUser(adminUser, "admin");
             for (int i=0; i<=5; i++){
                 if(i==3){
-                    Todo t = todoDBService.createTodo("Test-Todo " + i, "Todo-Title " + i, Calendar.getInstance(), adminUser, true);
+                    Todo t = todoDBService.createTodo("Test-Todo " + i, "Todo-Title " + i, Calendar.getInstance(), adminUser, true, 0);
                 }else{
                     todoDBService.createTodo("Test-Todo " + i, "Todo-Title " + i, Calendar.getInstance(), adminUser);
                 }

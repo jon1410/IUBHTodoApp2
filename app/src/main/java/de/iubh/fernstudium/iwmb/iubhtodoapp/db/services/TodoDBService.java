@@ -34,7 +34,7 @@ public class TodoDBService {
         this.dataStore = dataStore;
     }
 
-    public Todo createTodo(String description, String title, Calendar dueDate, User assignee, boolean isFavourite){
+    public Todo createTodo(String description, String title, Calendar dueDate, User assignee, boolean isFavourite, int contactId){
         TodoEntity todoEntity = new TodoEntity();
         todoEntity.setDescription(description);
         todoEntity.setTitle(title);
@@ -42,18 +42,19 @@ public class TodoDBService {
         todoEntity.setStatus(TodoStatus.OPEN);
         todoEntity.setFavoriteFlag(isFavourite);
         todoEntity.setUser(assignee);
+        todoEntity.setContactId(contactId);
 
         return dataStore.toBlocking().insert(todoEntity);
     }
 
     public Todo createTodo(String description, String title, Calendar dueDate, String assignee){
         UserEntity user = dataStore.toBlocking().findByKey(UserEntity.class, assignee);
-        return createTodo(description, title, dueDate, user, false);
+        return createTodo(description, title, dueDate, user, false, 0);
     }
 
-    public Todo createTodo(String description, String title, Calendar dueDate, String assignee, boolean isFavourite){
+    public Todo createTodo(String description, String title, Calendar dueDate, String assignee, boolean isFavourite, int contactId){
         UserEntity user = dataStore.toBlocking().findByKey(UserEntity.class, assignee);
-        return createTodo(description, title, dueDate, user, isFavourite);
+        return createTodo(description, title, dueDate, user, isFavourite, contactId);
     }
 
     public Todo updateFileName(int idToUpdate, String fileName){

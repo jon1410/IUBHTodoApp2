@@ -29,18 +29,18 @@ import io.requery.reactivex.ReactiveEntityStore;
 
 public class NewTodoActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
-    private static final String dateFormat = "dd.MM.yyyy";
     private TodoDBService todoDBService;
     private String currentUser;
     AutoCompleteTextView autoCompleteTextView;
     ContactListAdapter contactListAdapter;
+    ContactDTO selectedContact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_todo_activity);
         EditText dueDateEditText = findViewById(R.id.todoDueDate);
-        dueDateEditText.setText(DateFormat.format(dateFormat, Calendar.getInstance()));
+        dueDateEditText.setText(DateFormat.format(Constants.DATE_FORMAT, Calendar.getInstance()));
         todoDBService = new TodoDBService(getDataStore());
         currentUser = getIntent().getStringExtra(Constants.CURR_USER_KEY);
         autoCompleteTextView = findViewById(R.id.addContactToToDoAutoCompleteTextView);
@@ -49,10 +49,9 @@ public class NewTodoActivity extends AppCompatActivity implements DatePickerDial
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ContactDTO contactDTO= (ContactDTO) autoCompleteTextView.getAdapter().getItem(position);
-                Toast.makeText(NewTodoActivity.this,"Clicked " + contactDTO.getName(),Toast.LENGTH_LONG).show();
+                selectedContact= (ContactDTO) autoCompleteTextView.getAdapter().getItem(position);
+                Toast.makeText(NewTodoActivity.this,"Clicked " + selectedContact.getName(),Toast.LENGTH_LONG).show();
             }
-
         });
     }
 
@@ -63,16 +62,20 @@ public class NewTodoActivity extends AppCompatActivity implements DatePickerDial
     }
 
     public void onClickCreateNewTodo(View view){
-        Toast.makeText(this, "Create New Todo Button clicked...!", Toast.LENGTH_LONG).show();
         String title = ((EditText) findViewById(R.id.todoTitle)).getText().toString();
         String description = ((EditText) findViewById(R.id.todoDesc)).getText().toString();
         String dueDate = ((EditText) findViewById(R.id.todoDueDate)).getText().toString();
         boolean favoriteCheckboxChecked = ((CheckBox) findViewById(R.id.toIsFavourtie)).isChecked();
 
-        //TODO: check if linked to User...
-        todoDBService.createTodo(description, title, CalendarUtils.fromStringToCalendar(dueDate),
-                currentUser, favoriteCheckboxChecked);
+        int contactId = 0;
+        if(selectedContact != null){
+            contactId = selectedContact.getId();
+        }
 
+        todoDBService.createTodo(description, title, CalendarUtils.fromStringToCalendar(dueDate),
+                currentUser, favoriteCheckboxChecked, contactId);
+
+        //TODO: do not start new Activity, return to previous
         Intent intent = new Intent(this, OverviewActivity.class);
         intent.putExtra(Constants.CURR_USER_KEY, currentUser);
         startActivity(intent);
@@ -83,7 +86,7 @@ public class NewTodoActivity extends AppCompatActivity implements DatePickerDial
         EditText dueDateEditText = findViewById(R.id.todoDueDate);
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, dayOfMonth);
-        dueDateEditText.setText(DateFormat.format(dateFormat, calendar));
+        dueDateEditText.setText(DateFormat.format(Constants.DATE_FORMAT, calendar));
     }
 
     private ReactiveEntityStore<Persistable> getDataStore() {
