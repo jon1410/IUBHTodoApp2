@@ -3,7 +3,10 @@ package de.iubh.fernstudium.iwmb.iubhtodoapp.activities;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -21,12 +24,14 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Calendar;
 import java.util.Date;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.activities.dialogs.DatePickerFragment;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.activities.dialogs.SendEmailDialog;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.TodoApplication;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.adapter.ContactListAdapter;
@@ -37,11 +42,12 @@ import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.TodoStatus;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.contact.ContactDTO;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.CalendarUtils;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.ContactUtils;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.EmailUtil;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.ITextUtil;
 import io.requery.Persistable;
 import io.requery.reactivex.ReactiveEntityStore;
 
-public class TodoDetailActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class TodoDetailActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, SendEmailDialog.SendEmailDialogListener {
 
     private Todo selectedTodo;
     private boolean favStatus;
@@ -88,6 +94,12 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
         switch (menuItem.getItemId()) {
             case R.id.idMenuMail:
                 Toast.makeText(this, "New Email clicked!", Toast.LENGTH_LONG).show();
+                if(TextUtils.isEmpty(selectedTodo.getFileName())){
+                    sendPlainTextEmail();
+                }else{
+                    SendEmailDialog sendEmailDialog = new SendEmailDialog();
+                    sendEmailDialog.show(getSupportFragmentManager(), "SENDMAILATTACH");
+                }
                 break;
             case R.id.idMenuPdf:
                 Toast.makeText(this, "Generating PDF clicked!", Toast.LENGTH_LONG).show();
@@ -179,6 +191,16 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
         showProgressBar(false);
     }
 
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        sendEmailWithAttachment();
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        sendPlainTextEmail();
+    }
+
     private void showProgressBar(boolean show) {
         if(show){
             progressBar.setVisibility(View.VISIBLE);
@@ -191,7 +213,6 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     private String constructFileName() {
         return selectedTodo.getId() + "_Todo_Export_" + selectedTodo.getTitle() + ".pdf";
     }
-
 
     private void populateView() {
         EditText title = findViewById(R.id.idTitleDetailContent);
@@ -229,4 +250,31 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     private TodoApplication getCustomApplication(){
         return (TodoApplication) getApplication();
     }
+
+    private void sendEmailWithAttachment() {
+        Intent emailIntent = createBaseEmailIntent();
+        emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.email_content_attachment).toString());
+        String fileName = getFilesDir() + "/" + selectedTodo.getFileName();
+        Uri attachmentUri = FileProvider.getUriForFile(this, "de.iubh.fernstudium.iwmb.iubhtodoapp.fileprovider", new File(fileName));
+        emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        emailIntent.putExtra(Intent.EXTRA_STREAM, attachmentUri);
+
+        startActivity(Intent.createChooser(emailIntent, "Send mail with Attachment"));
+    }
+
+    private void sendPlainTextEmail() {
+        Intent emailIntent = createBaseEmailIntent();
+        emailIntent.putExtra(Intent.EXTRA_TEXT, EmailUtil.createEmailPlainTextContent(selectedTodo));
+        startActivity(Intent.createChooser(emailIntent, "Send mail"));
+    }
+
+    private Intent createBaseEmailIntent() {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("message/rfc822");
+        //emailIntent.putExtra(Intent.EXTRA_EMAIL, TO); TODO: evtl. check Email-Adress
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject).toString());
+        return emailIntent;
+    }
+
 }

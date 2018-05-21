@@ -54,7 +54,7 @@
     <string name="pdf_todo_Titel">Titel des Todo: </string>
     <string name="pdf_todo_Description_head">Beschreibung des Todo: </string>
     <string name="pdf_todo_dueDate_head">Erledigen bis: </string>
-    <string name="pdf_linked_contact_head">Verknüpt mit: </string>
+    <string name="pdf_linked_contact_head">Verknüpt mit Kontakt: </string>
 
     <string name="pdf_created">PDF erfolgreich erzeugt!</string>
     <string name="pdf_not_created">PDF konnte nicht erzeugt werden.</string>
@@ -64,6 +64,10 @@
 
     <string name="error_change_todo">Fehler beim Speicher der Änderungen!</string>
     <string name="ok_change_todo">Änderungen wurden erfolgreich gespeichert!</string>
+
+    <string name="pdf_exists_add_to_mail">Es existiert ein PDF mit Details zu diesem Todo, wollen Sie dieses als Anhang in der Email mitsenden?</string>
+    <string name="email_subject">Einladung zur Mitarbeit an einem Todo!</string>
+    <string name="email_content_attachment">Details können dem Anhang entnommen werden!</string>
 
     <string-array name="spinnerDropdown">
         <item>Sortieren nach..</item>
