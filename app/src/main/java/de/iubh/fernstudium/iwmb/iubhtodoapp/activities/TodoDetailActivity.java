@@ -51,6 +51,7 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
 
     private Todo selectedTodo;
     private boolean favStatus;
+    private boolean todoChanged;
     private TodoDBService todoDBService;
     private ITextUtil iTextUtil;
     private ProgressBar progressBar;
@@ -118,7 +119,17 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     }
 
     public void onClickReturn(View view) {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(Constants.CHANGE_TYPE_KEY, Constants.CHANGE_TYPE_UPDATE);
+        resultIntent.putExtra(Constants.CHANGED_TODO_KEY, selectedTodo);
+        resultIntent.putExtra(Constants.TODO_CHANGED_KEY, todoChanged);
+        setResult(RESULT_OK, resultIntent);
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.onClickReturn(getCurrentFocus());
     }
 
     public void onClickSaveChanges(View view) {
@@ -142,7 +153,8 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
         todoEntity.setContactId(contactId);
 
         Todo changedTodo = todoDBService.changeTodo(selectedTodo.getId(), todoEntity);
-        String toastText = null;
+        todoChanged = true;
+        String toastText;
         if(changedTodo != null){
             selectedTodo = changedTodo;
             populateView();
@@ -168,18 +180,18 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     }
 
     public void exportViewToPdf() {
-        showProgressBar(true);
         String fileName = constructFileName();
         Log.v("FILENAME.." , "Filename to write is: " + fileName);
         String toastText = null;
+        int visibility = View.INVISIBLE;
         try {
             FileOutputStream outputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
             boolean pdfCreated = iTextUtil.createPdfFromTodo(selectedTodo, outputStream);
             if(pdfCreated){
                 Todo updatedTodo = todoDBService.updateFileName(selectedTodo.getId(), fileName);
                 selectedTodo = updatedTodo;
-                pdfButton.setVisibility(View.VISIBLE);
                 toastText = getString(R.string.pdf_created);
+                visibility = View.VISIBLE;
             }else{
                 toastText = getString(R.string.pdf_not_created);
             }
@@ -187,8 +199,9 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
         } catch (Exception e) {
             Log.e("ERRORPDF","PDF could not be created....");
         }
+        todoChanged = true;
+        pdfButton.setVisibility(visibility);
         Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
-        showProgressBar(false);
     }
 
     @Override

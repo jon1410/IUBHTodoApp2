@@ -2,8 +2,8 @@ package de.iubh.fernstudium.iwmb.iubhtodoapp.activities;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,11 +16,12 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.activities.dialogs.DatePickerFragment;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.TodoApplication;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.adapter.ContactListAdapter;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.services.TodoDBService;
-import de.iubh.fernstudium.iwmb.iubhtodoapp.activities.dialogs.DatePickerFragment;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.contact.ContactDTO;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.CalendarUtils;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.ContactUtils;
@@ -72,13 +73,13 @@ public class NewTodoActivity extends AppCompatActivity implements DatePickerDial
             contactId = selectedContact.getId();
         }
 
-        todoDBService.createTodo(description, title, CalendarUtils.fromStringToCalendar(dueDate),
+        Todo newTodo = todoDBService.createTodo(description, title, CalendarUtils.fromStringToCalendar(dueDate),
                 currentUser, favoriteCheckboxChecked, contactId);
-
-        //TODO: do not start new Activity, return to previous
-        Intent intent = new Intent(this, OverviewActivity.class);
-        intent.putExtra(Constants.CURR_USER_KEY, currentUser);
-        startActivity(intent);
+        Intent newTodoIntent = new Intent();
+        newTodoIntent.putExtra(Constants.NEW_TODO_KEY, newTodo);
+        newTodoIntent.putExtra(Constants.CHANGE_TYPE_KEY, Constants.CHANGE_TYPE_INSERT);
+        setResult(RESULT_OK, newTodoIntent);
+        finish();
     }
 
     @Override

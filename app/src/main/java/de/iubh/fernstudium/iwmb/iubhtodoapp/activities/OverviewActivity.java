@@ -3,12 +3,14 @@ package de.iubh.fernstudium.iwmb.iubhtodoapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,14 +21,17 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.activities.dialogs.OverviewOnLongClickDialog;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.Constants;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.CalendarUtils;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.utils.TodoSorter;
 
-public class OverviewActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class OverviewActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, OverviewOnLongClickDialog.OverviewOnLongClickDialogListener {
 
     String currentUser;
     ListTodosFragment fragmentTodosForToday;
@@ -84,13 +89,29 @@ public class OverviewActivity extends AppCompatActivity implements AdapterView.O
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(data != null){
+            String changeType = data.getStringExtra(Constants.CHANGE_TYPE_KEY);
+            switch (changeType){
+                case Constants.CHANGE_TYPE_INSERT:
+                    handleInsertCallBack(data);
+                    break;
+                case Constants.CHANGE_TYPE_UPDATE:
+                    handleUpdateCallback(data);
+                default: break;
+            }
+        }
+
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.addTodo:
-                Toast.makeText(this, "add new Todo clicked!", Toast.LENGTH_LONG).show();
                 Intent newTodoActivityIntent = new Intent(this, NewTodoActivity.class);
                 newTodoActivityIntent.putExtra(Constants.CURR_USER_KEY, currentUser);
-                startActivity(newTodoActivityIntent);
+                startActivityForResult(newTodoActivityIntent, 1);
                 break;
             default:
                 break;
@@ -105,6 +126,51 @@ public class OverviewActivity extends AppCompatActivity implements AdapterView.O
         ListTodosFragment currentFragment = (ListTodosFragment) adapter.getItem(index);
         List<Todo> sortedTodos = sortTodos(currentFragment.getTodos(), value);
         currentFragment.updateTodos(sortedTodos);
+    }
+
+    @Override
+    public void onShowTodoDetails(DialogFragment dialog) {
+        ListTodosFragment currentFragment = getCurrentFragment();
+        int position = currentFragment.selectedPositionForLongClick;
+        if(position == viewPager.getCurrentItem()){
+            Log.v("SAMEINDEX", "The index is the same");
+        }
+        currentFragment.showDetail(position);
+    }
+
+    @Override
+    public void onDeleteTodo(DialogFragment dialog) {
+        ListTodosFragment currentFragment = getCurrentFragment();
+        int todoIdToDelete = currentFragment.getTodoIdForSelectedTodo();
+        fragmentAllTodos.deleteTodo(todoIdToDelete);
+        fragmentTodosForToday.deleteTodo(todoIdToDelete);
+    }
+
+    private void handleUpdateCallback(Intent data) {
+        boolean updated = data.getBooleanExtra(Constants.TODO_CHANGED_KEY, false);
+        if (updated) {
+            Todo todo = data.getParcelableExtra(Constants.CHANGED_TODO_KEY);
+            fragmentAllTodos.reloadChangedTodo(todo);
+            if(CalendarUtils.isToday(new Date(todo.getDueDate().getTime()))) {
+                fragmentTodosForToday.addIfNotExists(todo);
+            }else{
+                fragmentTodosForToday.removeIfExists(todo);
+            }
+        }
+    }
+
+    private void handleInsertCallBack(Intent data) {
+        Todo newTodo = data.getParcelableExtra(Constants.NEW_TODO_KEY);
+        if(CalendarUtils.isToday(new Date(newTodo.getDueDate().getTime()))){
+            fragmentTodosForToday.addNewTodo(newTodo);
+        }
+        fragmentAllTodos.addNewTodo(newTodo);
+    }
+
+    private ListTodosFragment getCurrentFragment(){
+        int index = viewPager.getCurrentItem();
+        ListTodosFragment currentFragment = (ListTodosFragment) adapter.getItem(index);
+        return currentFragment;
     }
 
     private List<Todo> sortTodos(List<Todo> todos, String sortBy) {

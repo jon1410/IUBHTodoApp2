@@ -4,24 +4,22 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_not_matching_password">The given Password does not match the stored one for this user.</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
-    <string name="user_not_found_exception">The user was not found.</string>
-    <string name="dialog_create_new_user">The user does not exist, do you wish to create it?</string>
-    <string name="dialog_user_created">The user was created, please log in.</string>
-    <string name="dialog_user_could_not_be_created">The user could not be created, please try again later.</string>
-    <string name="dialog_user_not_created">The user was not created.</string>
-    <string name="dialog_yes">Yes</string>
-    <string name="dialog_no">No</string>
-    <string name="login_successful">Login successful!</string>
+    <string name="action_sign_in">Einloggen oder Registrieren</string>
+    <string name="action_sign_in_short">Login</string>
+    <string name="error_invalid_email">The Email-Adresse ist nicht gültig.</string>
+    <string name="error_invalid_password">Das Passwort ist zu kurz.</string>
+    <string name="error_incorrect_password">Das Paswort ist nicht korrekt.</string>
+    <string name="error_not_matching_password">Das Passwort ist für diesen Benutzer ungültig.</string>
+    <string name="error_field_required">Dieses Feld ist verpflichtend anzugeben.</string>
+    <string name="permission_rationale">Die Berechtigung zum Auslesen deiner Kontakte ist notwendig, um diese Aktion durchführen zu können.</string>
+    <string name="user_not_found_exception">Benutzer existiert nicht.</string>
+    <string name="dialog_create_new_user">Der Benutzer existiert nicht, möchtest du den Benutzer erstellen?</string>
+    <string name="dialog_user_created">Benutzer wurde erstellt, du kannst dich nun einloggen.</string>
+    <string name="dialog_user_could_not_be_created">Der Benutzer konnte nicht erstellt werden, bitte probiere es später noch einmal.</string>
+    <string name="dialog_user_not_created">Der Benutzer wurde nicht erstellt.</string>
+    <string name="dialog_yes">Ja</string>
+    <string name="dialog_no">Nein</string>
+    <string name="login_successful">Login erfolgreich!</string>
     <string name="title_activity_list_todos_activitiy">ListTodosActivitiy</string>
 
     <string name="status_open">offen</string>
@@ -61,6 +59,7 @@
 
     <string name="btn_next">nächste Seite</string>
     <string name="btn_prev">vorherige Seite</string>
+    <string name="btn_cancel">Abbrechen</string>
 
     <string name="error_change_todo">Fehler beim Speicher der Änderungen!</string>
     <string name="ok_change_todo">Änderungen wurden erfolgreich gespeichert!</string>
@@ -69,14 +68,17 @@
     <string name="email_subject">Einladung zur Mitarbeit an einem Todo!</string>
     <string name="email_content_attachment">Details können dem Anhang entnommen werden!</string>
 
+    <string name="on_long_click_dialog_title">Wähle die gewünschte Aktion:</string>
+    <string-array name="onLongClickDialogItems">
+        <item>Todo Details anzeigen</item>
+        <item>Todo löschen</item>
+    </string-array>
+
     <string-array name="spinnerDropdown">
         <item>Sortieren nach..</item>
         <item>Datum</item>
         <item>Favorit</item>
         <item>Status</item>
     </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
