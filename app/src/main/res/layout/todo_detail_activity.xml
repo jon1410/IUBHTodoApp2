@@ -176,10 +176,11 @@
 
         <ImageButton
             android:id="@+id/idBtnBackToOverview"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="42dp"
+            android:layout_height="36dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
+            android:background="@color/colorPrimary"
             android:onClick="onClickReturn"
             android:src="@drawable/icon_left_holo_dark"
             android:text="@string/todo_btnbackToOverview"
@@ -189,10 +190,11 @@
 
         <ImageButton
             android:id="@+id/idBtnSaveChanged"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="42dp"
+            android:layout_height="36dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="32dp"
+            android:background="@color/colorPrimary"
             android:onClick="onClickSaveChanges"
             android:src="@drawable/icon_save_holo_dark"
             android:text="@string/todo_btnSaveChanges"
@@ -202,11 +204,12 @@
 
         <ImageButton
             android:id="@+id/idButtomShowPdf"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="42dp"
+            android:layout_height="36dp"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
+            android:background="@color/colorPrimary"
             android:onClick="onClickShowPdf"
             android:src="@drawable/icon_pdf_holo_dark"
             android:text="PDF"

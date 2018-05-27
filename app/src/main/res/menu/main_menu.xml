@@ -5,15 +5,16 @@
 
     <item
         android:id="@+id/addTodo"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/icon_add_plus_holo_dark"
         android:title="@string/newTodo_Button"
         android:tooltipText="@string/newTodo_Button"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/sortTodosSpinner"
-        app:actionViewClass="android.widget.Spinner"
+        android:icon="@drawable/icon_sort_holo_dark"
         android:title="@string/sort_Todos"
         android:tooltipText="@string/sort_Todos"
-        app:showAsAction="always"/>
+        app:actionViewClass="android.widget.Spinner"
+        app:showAsAction="always" />
 </menu>

@@ -1,11 +1,8 @@
 package de.iubh.fernstudium.iwmb.iubhtodoapp.utils;
 
-import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
-import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.util.Log;
 

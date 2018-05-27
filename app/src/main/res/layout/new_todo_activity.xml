@@ -93,6 +93,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
+            android:background="@color/colorPrimary"
             android:onClick="onClickCreateNewTodo"
             android:text="@string/todo_buttonCreate"
             app:layout_constraintEnd_toEndOf="parent"

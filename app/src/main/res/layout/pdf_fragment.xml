@@ -27,6 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
+            android:background="@color/colorPrimary"
             android:text="@string/btn_prev"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -37,6 +38,7 @@
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
+            android:background="@color/colorPrimary"
             android:text="@string/btn_next"
             android:textSize="14sp"
             android:textStyle="bold" />
