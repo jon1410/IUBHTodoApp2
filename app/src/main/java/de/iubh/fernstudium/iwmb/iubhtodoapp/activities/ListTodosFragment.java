@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.iubh.fernstudium.iwmb.iubhtodoapp.R;
@@ -24,6 +25,7 @@ import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.TodoApplication;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.app.config.adapter.TodoAdapter;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.entities.Todo;
 import de.iubh.fernstudium.iwmb.iubhtodoapp.db.services.TodoDBService;
+import de.iubh.fernstudium.iwmb.iubhtodoapp.domain.TodoStatus;
 import io.requery.Persistable;
 import io.requery.reactivex.ReactiveEntityStore;
 
@@ -33,19 +35,27 @@ public class ListTodosFragment extends Fragment implements RecyclerViewItemClick
     TodoDBService todoDBService;
     String currentUser;
     boolean onlyTodosForCurrentDate;
+    boolean onlyDoneTodos;
+    boolean intialized;
     String orderBy;
     List<Todo> todos;
     int selectedPositionForLongClick = -1;
-    int listIndex = 0;
+    int listIndex = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initliazeDataStore();
         currentUser = getArguments().getString(Constants.CURR_USER_KEY);
-        onlyTodosForCurrentDate = getArguments().getBoolean(Constants.SHOW_TODOS_FOR_TODAY_KEY);
-        orderBy = getArguments().getString(Constants.ORDER_BY_KEY);
-        todoDBService = new TodoDBService(getDataStore());
-        todos = getTodosForUser(onlyTodosForCurrentDate);
+        onlyDoneTodos = getArguments().getBoolean(Constants.ONLY_DONE_TODOS_KEY);
+        if(onlyDoneTodos){
+            todos = getOnlyDoneTodosForCurrentUser();
+        }else {
+            onlyTodosForCurrentDate = getArguments().getBoolean(Constants.SHOW_TODOS_FOR_TODAY_KEY);
+            orderBy = getArguments().getString(Constants.ORDER_BY_KEY);
+            todos = getTodosForUser(onlyTodosForCurrentDate);
+        }
+        intialized = true;
     }
 
     @Override
@@ -67,15 +77,40 @@ public class ListTodosFragment extends Fragment implements RecyclerViewItemClick
         return rootView;
     }
 
+    public boolean isInitialized(){
+        Log.v("ISINIT", "Initilizied: " + intialized);
+        return intialized;
+    }
+
     public List<Todo> getTodos() {
         return todos;
     }
 
-    public void updateTodos(List<Todo> sortedTodos) {
-        todoAdapter = new TodoAdapter(sortedTodos);
+    public void updateTodos(List<Todo> newTodos) {
+        todos = new ArrayList<>(newTodos);
+        todoAdapter = new TodoAdapter(todos);
         todoAdapter.notifyDataSetChanged();
         reloadFragment();
     }
+
+    public void reloadDoneTodos(){
+        initliazeDataStore();
+        List<Todo> reloaded = this.getOnlyDoneTodosForCurrentUser();
+        this.updateTodos(reloaded);
+    }
+
+    public void reloadTodosForToday(){
+        initliazeDataStore();
+        List<Todo> reloaded = this.getTodosForUser(true);
+        this.updateTodos(reloaded);
+    }
+
+    public void reloadAllTodos(){
+        initliazeDataStore();
+        List<Todo> reloaded = this.getTodosForUser(false);
+        this.updateTodos(reloaded);
+    }
+
 
     @Override
     public void onClick(View view, int position) {
@@ -106,13 +141,22 @@ public class ListTodosFragment extends Fragment implements RecyclerViewItemClick
         if (onlyTodosForCurrentDate) {
             return todoDBService.getTodosAsListForUserAndCurrentDate(currentUser);
         }
-        return todoDBService.getTodosAsListForUser(currentUser);
+        return todoDBService.getTodosNotDoneAsListForUser(currentUser);
+    }
+
+
+    private List<Todo> getOnlyDoneTodosForCurrentUser() {
+        return todoDBService.getDoneTodosForUserAsList(currentUser);
     }
 
     public void showDetail(int position) {
         Intent detailIntent = new Intent(getContext(), TodoDetailActivity.class);
         detailIntent.putExtra(Constants.SEL_TODO_KEY, todos.get(position));
         startActivityForResult(detailIntent, 1);
+    }
+
+    public Todo getSelectedTodo() {
+        return todos.get(selectedPositionForLongClick);
     }
 
     public int getTodoIdForSelectedTodo() {
@@ -122,6 +166,10 @@ public class ListTodosFragment extends Fragment implements RecyclerViewItemClick
         } else {
             return -1;
         }
+    }
+
+    public Todo changeStatusToDone(Todo todo){
+        return todoDBService.updateStatus(todo.getId(), TodoStatus.DONE);
     }
 
     public void deleteTodo(int todoId) {
@@ -169,14 +217,14 @@ public class ListTodosFragment extends Fragment implements RecyclerViewItemClick
     private void removeTodo() {
         todos.remove(listIndex);
         todoAdapter.notifyItemRemoved(listIndex);
-        listIndex = 0;
+        listIndex = -1;
         reloadFragment();
     }
 
     private void reloadTodo(Todo todo){
         todos.set(listIndex, todo);
         todoAdapter.notifyItemChanged(listIndex);
-        listIndex = 0;
+        listIndex = -1;
         reloadFragment();
     }
 
@@ -190,6 +238,12 @@ public class ListTodosFragment extends Fragment implements RecyclerViewItemClick
         }
         listIndex = -1;
         return null;
+    }
+
+    private void initliazeDataStore(){
+        if(this.todoDBService == null){
+            this.todoDBService = new TodoDBService(getDataStore());
+        }
     }
 
 }

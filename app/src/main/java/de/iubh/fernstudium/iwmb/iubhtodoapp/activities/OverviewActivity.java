@@ -36,6 +36,7 @@ public class OverviewActivity extends AppCompatActivity implements AdapterView.O
     String currentUser;
     ListTodosFragment fragmentTodosForToday;
     ListTodosFragment fragmentAllTodos;
+    ListTodosFragment fragmentDoneTodos;
     ViewPagerAdapter adapter;
     ViewPager viewPager;
 
@@ -53,6 +54,7 @@ public class OverviewActivity extends AppCompatActivity implements AdapterView.O
         Bundle bundleForTodosForToday = new Bundle();
         bundleForTodosForToday.putString(Constants.CURR_USER_KEY, currentUser);
         bundleForTodosForToday.putString(Constants.ORDER_BY_KEY, Constants.ORDER_BY_DATE);
+        bundleForTodosForToday.putBoolean(Constants.ONLY_DONE_TODOS_KEY, false);
         bundleForTodosForToday.putBoolean(Constants.SHOW_TODOS_FOR_TODAY_KEY, true);
         fragmentTodosForToday.setArguments(bundleForTodosForToday);
 
@@ -60,12 +62,20 @@ public class OverviewActivity extends AppCompatActivity implements AdapterView.O
         Bundle bundleForAllTodos = new Bundle();
         bundleForAllTodos.putString(Constants.CURR_USER_KEY, currentUser);
         bundleForTodosForToday.putString(Constants.ORDER_BY_KEY, Constants.ORDER_BY_DATE);
+        bundleForAllTodos.putBoolean(Constants.ONLY_DONE_TODOS_KEY, false);
         bundleForAllTodos.putBoolean(Constants.SHOW_TODOS_FOR_TODAY_KEY, false);
         fragmentAllTodos.setArguments(bundleForAllTodos);
 
+        fragmentDoneTodos = new ListTodosFragment();
+        Bundle bundleForDoneTodos = new Bundle();
+        bundleForDoneTodos.putString(Constants.CURR_USER_KEY, currentUser);
+        bundleForDoneTodos.putBoolean(Constants.ONLY_DONE_TODOS_KEY, true);
+        fragmentDoneTodos.setArguments(bundleForDoneTodos);
+
         // Add Fragments to adapter one by one
-        adapter.addFragment(fragmentTodosForToday, "Todos for Today");
-        adapter.addFragment(fragmentAllTodos, "All Todos");
+        adapter.addFragment(fragmentTodosForToday, getText(R.string.fragment_today_title).toString());
+        adapter.addFragment(fragmentAllTodos, getText(R.string.fragment_all_todos_title).toString());
+        adapter.addFragment(fragmentDoneTodos, getText(R.string.fragment_done_title).toString());
         viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = findViewById(R.id.tabs);
@@ -144,17 +154,34 @@ public class OverviewActivity extends AppCompatActivity implements AdapterView.O
         int todoIdToDelete = currentFragment.getTodoIdForSelectedTodo();
         fragmentAllTodos.deleteTodo(todoIdToDelete);
         fragmentTodosForToday.deleteTodo(todoIdToDelete);
+        fragmentDoneTodos.deleteTodo(todoIdToDelete);
+    }
+
+    @Override
+    public void onFinishTodo(DialogFragment dialog) {
+        ListTodosFragment currentFragment = getCurrentFragment();
+        Todo selectedTodo = currentFragment.getSelectedTodo();
+        Todo changedTodo = currentFragment.changeStatusToDone(selectedTodo);
+        fragmentDoneTodos.addIfNotExists(changedTodo);
+        fragmentTodosForToday.removeIfExists(changedTodo);
+        fragmentAllTodos.removeIfExists(changedTodo);
     }
 
     private void handleUpdateCallback(Intent data) {
         boolean updated = data.getBooleanExtra(Constants.TODO_CHANGED_KEY, false);
-        if (updated) {
-            Todo todo = data.getParcelableExtra(Constants.CHANGED_TODO_KEY);
-            fragmentAllTodos.reloadChangedTodo(todo);
-            if(CalendarUtils.isToday(new Date(todo.getDueDate().getTime()))) {
-                fragmentTodosForToday.addIfNotExists(todo);
-            }else{
-                fragmentTodosForToday.removeIfExists(todo);
+        if(updated) {
+            //Depending, if Tab in Viepager was already opened
+            //not all Fragments may be initiliazed
+            if(fragmentDoneTodos.isInitialized()){
+                fragmentDoneTodos.reloadDoneTodos();
+            }
+
+            if(fragmentTodosForToday.isInitialized()){
+                fragmentTodosForToday.reloadTodosForToday();
+            }
+
+            if(fragmentAllTodos.isInitialized()){
+                fragmentAllTodos.reloadAllTodos();
             }
         }
     }

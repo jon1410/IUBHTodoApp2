@@ -21,6 +21,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -52,6 +54,8 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     private Todo selectedTodo;
     private boolean favStatus;
     private boolean todoChanged;
+    private boolean todoFinished;
+    private boolean todoReopend;
     private TodoDBService todoDBService;
     private ITextUtil iTextUtil;
     private ProgressBar progressBar;
@@ -135,7 +139,7 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     public void onClickSaveChanges(View view) {
         String title = ((EditText) findViewById(R.id.idTitleDetailContent)).getText().toString();
         String description = ((EditText) findViewById(R.id.idDescContent)).getText().toString();
-        String statusEdt = ((EditText) findViewById(R.id.idStatusDetailContent)).getText().toString();
+        String statusEdt = getTextFromCheckedRadioButton();
         String dueDateEdt = ((EditText) findViewById(R.id.idDueDateDetailContent)).getText().toString();
         ToggleButton favouriteBtn = findViewById(R.id.idFavDetailButton);
         int contactId = 0;
@@ -163,6 +167,16 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
             toastText = getText(R.string.error_change_todo).toString();
         }
         Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+    }
+
+    private String getTextFromCheckedRadioButton() {
+        RadioGroup radioGroupStatus = findViewById(R.id.idStatusRadioGroup);
+        int checkedRadioId = radioGroupStatus.getCheckedRadioButtonId();
+        RadioButton checkedRadioButton  = findViewById(checkedRadioId);
+        if(checkedRadioButton.getText() != null){
+            return checkedRadioButton.getText().toString();
+        }
+        return null;
     }
 
     public void onClickShowPdf(View view){
@@ -232,8 +246,7 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
         title.setText(selectedTodo.getTitle());
         EditText description = findViewById(R.id.idDescContent);
         description.setText(selectedTodo.getDescription());
-        EditText status = findViewById(R.id.idStatusDetailContent);
-        status.setText(selectedTodo.getStatus().getStatusText());
+        setRadioButtonForStatus();
         EditText dueDate = findViewById(R.id.idDueDateDetailContent);
         dueDate.setText(DateFormat.format(Constants.DATE_FORMAT, new Date(selectedTodo.getDueDate().getTime())));
         ToggleButton favouriteBtn = findViewById(R.id.idFavDetailButton);
@@ -250,6 +263,23 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
                 autoCompleteTextView.setText(contactName);
             }
         }
+    }
+
+    private void setRadioButtonForStatus() {
+        if(TodoStatus.OPEN == selectedTodo.getStatus()){
+            setRadioChecked(R.id.idRadioOpen);
+        }
+        if(TodoStatus.IN_PROGRESS == selectedTodo.getStatus()){
+            setRadioChecked(R.id.idRadioInProgress);
+        }
+        if(TodoStatus.DONE == selectedTodo.getStatus()){
+            setRadioChecked(R.id.idRadioDone);
+        }
+    }
+
+    private void setRadioChecked(int id) {
+        RadioButton radio = findViewById(id);
+        radio.setChecked(true);
     }
 
     private void setUpAutoComplete() {
@@ -282,8 +312,7 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     }
 
     private Intent createBaseEmailIntent() {
-        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.setData(Uri.parse("mailto:"));
+        Intent emailIntent = new Intent(Intent.ACTION_SEND, Uri.parse("mailto:"));
         emailIntent.setType("message/rfc822");
         //emailIntent.putExtra(Intent.EXTRA_EMAIL, TO); TODO: evtl. check Email-Adress
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject).toString());

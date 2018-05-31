@@ -9,6 +9,7 @@ public class Constants {
     public static final String CURR_USER_KEY = "curUser";
     public static final String SHOW_TODOS_FOR_TODAY_KEY = "showTodosForToday";
     public static final String ORDER_BY_KEY = "orderBy";
+    public static final String ONLY_DONE_TODOS_KEY = "onlyDoneTodos";
     public static final String SEL_TODO_KEY = "selectedTodo";
     public static final String NEW_TODO_KEY = "newTodo";
     public static final String CHANGED_TODO_KEY = "changedTodo";

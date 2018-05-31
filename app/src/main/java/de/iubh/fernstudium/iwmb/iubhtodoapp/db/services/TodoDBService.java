@@ -63,6 +63,12 @@ public class TodoDBService {
         return dataStore.toBlocking().update(todoEntity);
     }
 
+    public Todo updateStatus(int idToUpdate, TodoStatus newStatus){
+        TodoEntity todoEntity = (TodoEntity) getTodo(idToUpdate);
+        todoEntity.setStatus(newStatus);
+        return dataStore.toBlocking().update(todoEntity);
+    }
+
     public Todo changeTodo(int idToUpdate, Todo todoValues){
         TodoEntity todoEntity = (TodoEntity) getTodo(idToUpdate);
         if(todoEntity == null){
@@ -104,28 +110,45 @@ public class TodoDBService {
         return true;
     }
 
-    public Result<TodoEntity> getTodosForUser(User user){
-        return dataStore.toBlocking().select(TodoEntity.class).where(TodoEntity.USER.eq(user)).get();
+    public Result<TodoEntity> getNotDoneTodosForUser(User user){
+        return dataStore.toBlocking().select(TodoEntity.class)
+                .where(TodoEntity.USER.eq(user))
+                .and(TodoEntity.STATUS.notEqual(TodoStatus.DONE)).get();
     }
 
     public Result<TodoEntity> getTodosForUserAndDate(User user){
         DateTime jodaDate = DateTime.now().withTimeAtStartOfDay();
         Timestamp from = new Timestamp(jodaDate.toDate().getTime());
         Timestamp to = new Timestamp(jodaDate.plusDays(1).minusSeconds(1).toDate().getTime());
-        return dataStore.toBlocking().select(TodoEntity.class).where(TodoEntity.USER.eq(user)).and(TodoEntity.DUE_DATE.between(from, to)).get();
+        return dataStore.toBlocking().select(TodoEntity.class)
+                .where(TodoEntity.USER.eq(user))
+                .and(TodoEntity.DUE_DATE.between(from, to))
+                .and(TodoEntity.STATUS.notEqual(TodoStatus.DONE)).get();
     }
 
-    public Result<TodoEntity> getTodosForUser(String userId){
-        return this.getTodosForUser(getUser(userId));
+    public Result<TodoEntity> getNotDoneTodosForUser(String userId){
+        return this.getNotDoneTodosForUser(getUser(userId));
     }
 
-    public List<Todo> getTodosAsListForUser(String userId){
-        Result<TodoEntity> todoEntityResult = this.getTodosForUser(userId);
+
+    public Result<TodoEntity> getDoneTodosForUser(User user) {
+        return dataStore.toBlocking().select(TodoEntity.class)
+                .where(TodoEntity.USER.eq(user))
+                .and(TodoEntity.STATUS.eq(TodoStatus.DONE)).get();
+    }
+
+    public List<Todo> getTodosNotDoneAsListForUser(String userId){
+        Result<TodoEntity> todoEntityResult = this.getNotDoneTodosForUser(userId);
         return new ArrayList<Todo>(todoEntityResult.toList());
     }
 
     public List<Todo> getTodosAsListForUserAndCurrentDate(String userId){
         Result<TodoEntity> todoEntityResult = this.getTodosForUserAndDate(getUser(userId));
+        return new ArrayList<Todo>(todoEntityResult.toList());
+    }
+
+    public List<Todo> getDoneTodosForUserAsList(String userId){
+        Result<TodoEntity> todoEntityResult = this.getDoneTodosForUser(getUser(userId));
         return new ArrayList<Todo>(todoEntityResult.toList());
     }
 

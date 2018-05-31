@@ -45,6 +45,7 @@ public class ContactUtils {
                         ce.close();
                     }
                     contacts.add(new ContactDTO(Integer.valueOf(contactId), name, email));
+                    ce.close();
                 } while (cr.moveToNext());
             }
         } catch (Exception e) {

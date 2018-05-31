@@ -67,11 +67,15 @@
     <string name="pdf_exists_add_to_mail">Es existiert ein PDF mit Details zu diesem Todo, wollen Sie dieses als Anhang in der Email mitsenden?</string>
     <string name="email_subject">Einladung zur Mitarbeit an einem Todo!</string>
     <string name="email_content_attachment">Details können dem Anhang entnommen werden!</string>
+    <string name="fragment_all_todos_title">Alle Todos</string>
+    <string name="fragment_today_title">Todos für heute</string>
+    <string name="fragment_done_title">Abgeschlossene Todos</string>
 
     <string name="on_long_click_dialog_title">Wähle die gewünschte Aktion:</string>
     <string-array name="onLongClickDialogItems">
         <item>Todo Details anzeigen</item>
         <item>Todo löschen</item>
+        <item>Todo abschließen</item>
     </string-array>
 
     <string-array name="spinnerDropdown">

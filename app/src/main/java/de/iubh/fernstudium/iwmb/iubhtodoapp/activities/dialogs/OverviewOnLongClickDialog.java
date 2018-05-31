@@ -13,8 +13,8 @@ public class OverviewOnLongClickDialog extends DialogFragment {
 
     public interface OverviewOnLongClickDialogListener {
         void onShowTodoDetails(DialogFragment dialog);
-
         void onDeleteTodo(DialogFragment dialog);
+        void onFinishTodo(DialogFragment dialog);
     }
 
     OverviewOnLongClickDialogListener listener;
@@ -42,6 +42,9 @@ public class OverviewOnLongClickDialog extends DialogFragment {
                                 break;
                             case 1:
                                 listener.onDeleteTodo(OverviewOnLongClickDialog.this);
+                                break;
+                            case 2:
+                                listener.onFinishTodo(OverviewOnLongClickDialog.this);
                                 break;
                             default:
                                 dismiss();

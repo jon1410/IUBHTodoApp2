@@ -72,6 +72,37 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/idDescDetail" />
 
+        <RadioGroup
+            android:id="@+id/idStatusRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toEndOf="@+id/idStatusDetail"
+            app:layout_constraintTop_toBottomOf="@+id/idDescContent">
+
+            <RadioButton
+                android:id="@+id/idRadioOpen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/status_open" />
+
+            <RadioButton
+                android:id="@+id/idRadioInProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/status_in_progress" />
+
+            <RadioButton
+                android:id="@+id/idRadioDone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/status_done" />
+        </RadioGroup>
+
         <TextView
             android:id="@+id/idStatusDetail"
             android:layout_width="0dp"
@@ -83,19 +114,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/idDescContent" />
 
-        <EditText
-            android:id="@+id/idStatusDetailContent"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:inputType="text"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/idStatusDetail"
-            app:layout_constraintTop_toBottomOf="@+id/idDescContent" />
-
         <TextView
             android:id="@+id/idDueDateDetail"
             android:layout_width="0dp"
@@ -105,7 +123,7 @@
             android:text="@string/todo_dueDate_short"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/idStatusDetailContent"
+            app:layout_constraintTop_toBottomOf="@+id/idStatusRadioGroup"
             tools:text="@string/todo_dueDate_short" />
 
         <EditText
@@ -120,7 +138,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/idDueDateDetail"
-            app:layout_constraintTop_toBottomOf="@+id/idStatusDetailContent" />
+            app:layout_constraintTop_toBottomOf="@+id/idStatusRadioGroup" />
 
         <TextView
             android:id="@+id/idFavDetail"
@@ -178,13 +196,15 @@
             android:id="@+id/idBtnBackToOverview"
             android:layout_width="42dp"
             android:layout_height="36dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:background="@color/colorPrimary"
             android:onClick="onClickReturn"
             android:src="@drawable/icon_left_holo_dark"
             android:text="@string/todo_btnbackToOverview"
             android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/idLinkedToDetailAutoCompleteContent" />
 
@@ -192,13 +212,15 @@
             android:id="@+id/idBtnSaveChanged"
             android:layout_width="42dp"
             android:layout_height="36dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:background="@color/colorPrimary"
             android:onClick="onClickSaveChanges"
             android:src="@drawable/icon_save_holo_dark"
             android:text="@string/todo_btnSaveChanges"
             android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/idLinkedToDetailAutoCompleteContent" />
 
@@ -206,13 +228,15 @@
             android:id="@+id/idButtomShowPdf"
             android:layout_width="42dp"
             android:layout_height="36dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:background="@color/colorPrimary"
             android:onClick="onClickShowPdf"
             android:src="@drawable/icon_pdf_holo_dark"
             android:text="PDF"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/idBtnSaveChanged"
             app:layout_constraintStart_toEndOf="@+id/idBtnBackToOverview"
             app:layout_constraintTop_toBottomOf="@+id/idLinkedToDetailAutoCompleteContent" />

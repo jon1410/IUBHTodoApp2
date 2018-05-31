@@ -17,7 +17,7 @@ import io.requery.sql.EntityDataStore;
 public class TodoApplication extends Application {
 
     public static Resources resources;
-    private ReactiveEntityStore<Persistable> dataStore;
+    public static ReactiveEntityStore<Persistable> dataStore;
 
     @Override
     public void onCreate() {
