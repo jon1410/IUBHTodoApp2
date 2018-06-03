@@ -24,9 +24,6 @@ public class RecyclerViewItemClickListener implements RecyclerView.OnItemTouchLi
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
                 View child = recycleView.findChildViewUnder(e.getX(), e.getY());
-                if (child != null) {
-                    Log.v("CHILD_ID", "ID of child: " + child.getId());
-                }
                 return true;
             }
 
@@ -34,7 +31,6 @@ public class RecyclerViewItemClickListener implements RecyclerView.OnItemTouchLi
             public void onLongPress(MotionEvent e) {
                 View child = recycleView.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && itemClickListener != null) {
-                    Log.v("CHILD_ID", "ID of child: " + child.getId());
                     itemClickListener.onLongClick(child, recycleView.getChildAdapterPosition(child));
                 }
             }
@@ -47,7 +43,6 @@ public class RecyclerViewItemClickListener implements RecyclerView.OnItemTouchLi
         if (child != null && itemClickListener != null && gestureDetector.onTouchEvent(e)) {
             itemClickListener.onClick(child, rv.getChildAdapterPosition(child));
         }
-
         return false;
     }
 

@@ -39,6 +39,7 @@ public class OverviewActivity extends AppCompatActivity implements AdapterView.O
     ListTodosFragment fragmentDoneTodos;
     ViewPagerAdapter adapter;
     ViewPager viewPager;
+    Spinner sortSpinner;
 
     @Override
     public void onCreate(Bundle savedInstance){
@@ -80,6 +81,24 @@ public class OverviewActivity extends AppCompatActivity implements AdapterView.O
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if(sortSpinner != null){
+                    sortSpinner.setSelection(0);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     @Override
@@ -87,7 +106,7 @@ public class OverviewActivity extends AppCompatActivity implements AdapterView.O
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         MenuItem item = menu.findItem(R.id.sortTodosSpinner);
-        Spinner sortSpinner = (Spinner) item.getActionView();
+        sortSpinner = (Spinner) item.getActionView();
 
         ArrayAdapter<CharSequence> dropDownValuesAdapter = ArrayAdapter.createFromResource(this,
                 R.array.spinnerDropdown, android.R.layout.simple_spinner_item);
@@ -142,9 +161,6 @@ public class OverviewActivity extends AppCompatActivity implements AdapterView.O
     public void onShowTodoDetails(DialogFragment dialog) {
         ListTodosFragment currentFragment = getCurrentFragment();
         int position = currentFragment.selectedPositionForLongClick;
-        if(position == viewPager.getCurrentItem()){
-            Log.v("SAMEINDEX", "The index is the same");
-        }
         currentFragment.showDetail(position);
     }
 
@@ -209,8 +225,10 @@ public class OverviewActivity extends AppCompatActivity implements AdapterView.O
 
         if(Constants.ORDER_BY_FAV.equalsIgnoreCase(sortBy)){
             sortedTodos = TodoSorter.sortTodosByFavoriteFlag(todos);
-        }else if(Constants.ORDER_BY_STATUS.equalsIgnoreCase(sortBy)){
-            sortedTodos = TodoSorter.sortTodosByStatus(todos);
+        }else if(Constants.ORDER_BY_STATUS_IN_PROGRESS.equalsIgnoreCase(sortBy)){
+            sortedTodos = TodoSorter.sortTodosByStatusInProgress(todos);
+        }else if(Constants.ORDER_BY_STATUS_OPEN.equalsIgnoreCase(sortBy)){
+            sortedTodos = TodoSorter.sortTodosByStatusOpen(todos);
         }else if(Constants.ORDER_BY_DATE.equalsIgnoreCase(sortBy)){
             sortedTodos = TodoSorter.sortTodosByDueDate(todos);
         }else if(sortBy.startsWith(Constants.ORDER_BY_DB)){

@@ -20,7 +20,8 @@ public class Constants {
 
     public static final String ORDER_BY_DATE = "DATUM";
     public static final String ORDER_BY_FAV = "FAVORIT";
-    public static final String ORDER_BY_STATUS = "STATUS";
+    public static final String ORDER_BY_STATUS_OPEN = "Status Offen";
+    public static final String ORDER_BY_STATUS_IN_PROGRESS = "Status in Arbeit";
     public static final String ORDER_BY_DB = "Sortieren nach";
 
     public static final String DATE_FORMAT = "dd.MM.yyyy";

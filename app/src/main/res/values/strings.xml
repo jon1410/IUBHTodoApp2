@@ -82,7 +82,8 @@
         <item>Sortieren nach..</item>
         <item>Datum</item>
         <item>Favorit</item>
-        <item>Status</item>
+        <item>Status Offen</item>
+        <item>Status in Arbeit</item>
     </string-array>
 
 </resources>

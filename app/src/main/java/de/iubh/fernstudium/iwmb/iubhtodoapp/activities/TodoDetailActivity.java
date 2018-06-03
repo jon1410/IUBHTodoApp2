@@ -80,7 +80,6 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedContact = (ContactDTO) autoCompleteTextView.getAdapter().getItem(position);
-                Toast.makeText(TodoDetailActivity.this, "Clicked " + selectedContact.getName(), Toast.LENGTH_LONG).show();
             }
         });
         populateView();
@@ -98,7 +97,6 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
 
         switch (menuItem.getItemId()) {
             case R.id.idMenuMail:
-                Toast.makeText(this, "New Email clicked!", Toast.LENGTH_LONG).show();
                 if(TextUtils.isEmpty(selectedTodo.getFileName())){
                     sendPlainTextEmail();
                 }else{
@@ -107,7 +105,6 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
                 }
                 break;
             case R.id.idMenuPdf:
-                Toast.makeText(this, "Generating PDF clicked!", Toast.LENGTH_LONG).show();
                 exportViewToPdf();
                 break;
             default:

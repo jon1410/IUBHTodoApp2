@@ -14,7 +14,6 @@
         android:id="@+id/sortTodosSpinner"
         android:icon="@drawable/icon_sort_holo_dark"
         android:title="@string/sort_Todos"
-        android:tooltipText="@string/sort_Todos"
         app:actionViewClass="android.widget.Spinner"
         app:showAsAction="always" />
 </menu>

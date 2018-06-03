@@ -62,14 +62,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-
     // UI references.
     private AutoCompleteTextView emailView;
     private EditText passwordView;
@@ -86,7 +78,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         emailView = findViewById(R.id.email);
         populateAutoComplete();
 
-        passwordView = (EditText) findViewById(R.id.password);
+        passwordView = findViewById(R.id.password);
         passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
