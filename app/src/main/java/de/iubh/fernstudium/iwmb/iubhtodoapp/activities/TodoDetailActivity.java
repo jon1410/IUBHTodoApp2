@@ -54,8 +54,6 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     private Todo selectedTodo;
     private boolean favStatus;
     private boolean todoChanged;
-    private boolean todoFinished;
-    private boolean todoReopend;
     private TodoDBService todoDBService;
     private ITextUtil iTextUtil;
     private ProgressBar progressBar;
@@ -309,10 +307,11 @@ public class TodoDetailActivity extends AppCompatActivity implements DatePickerD
     }
 
     private Intent createBaseEmailIntent() {
-        Intent emailIntent = new Intent(Intent.ACTION_SEND, Uri.parse("mailto:"));
+        Intent emailIntent = new Intent(Intent.ACTION_SEND,
+                                             Uri.parse("mailto:"));
         emailIntent.setType("message/rfc822");
-        //emailIntent.putExtra(Intent.EXTRA_EMAIL, TO); TODO: evtl. check Email-Adress
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject).toString());
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT,
+                                 getString(R.string.email_subject));
         return emailIntent;
     }
 

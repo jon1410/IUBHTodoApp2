@@ -61,7 +61,6 @@ public class ListTodosFragment extends Fragment implements RecyclerViewItemClick
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.v("ActivityResultFragment", "sfsdgsg");
     }
 
     @Override
@@ -78,7 +77,6 @@ public class ListTodosFragment extends Fragment implements RecyclerViewItemClick
     }
 
     public boolean isInitialized(){
-        Log.v("ISINIT", "Initilizied: " + intialized);
         return intialized;
     }
 
@@ -189,13 +187,6 @@ public class ListTodosFragment extends Fragment implements RecyclerViewItemClick
         todos.add(size, todo);
         todoAdapter.notifyItemInserted(size);
         reloadFragment();
-    }
-
-    public void reloadChangedTodo(Todo todo) {
-        Todo t = getTodoForId(todo.getId());
-        if (todo != null && listIndex >= 0) {
-            reloadTodo(todo);
-        }
     }
 
     public void addIfNotExists(Todo todo) {
