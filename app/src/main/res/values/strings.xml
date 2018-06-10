@@ -61,7 +61,7 @@
     <string name="btn_prev">vorherige Seite</string>
     <string name="btn_cancel">Abbrechen</string>
 
-    <string name="error_change_todo">Fehler beim Speicher der Änderungen!</string>
+    <string name="error_change_todo">Fehler beim Speichern der Änderungen!</string>
     <string name="ok_change_todo">Änderungen wurden erfolgreich gespeichert!</string>
 
     <string name="pdf_exists_add_to_mail">Es existiert ein PDF mit Details zu diesem Todo, wollen Sie dieses als Anhang in der Email mitsenden?</string>
