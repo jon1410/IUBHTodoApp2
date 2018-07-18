@@ -51,7 +51,6 @@ public class NewTodoActivity extends AppCompatActivity implements DatePickerDial
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedContact= (ContactDTO) autoCompleteTextView.getAdapter().getItem(position);
-                Toast.makeText(NewTodoActivity.this,"Clicked " + selectedContact.getName(),Toast.LENGTH_LONG).show();
             }
         });
     }

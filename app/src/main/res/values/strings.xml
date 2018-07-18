@@ -35,7 +35,8 @@
     <string name="todo_desc">Beschreibung</string>
     <string name="todo_dueDate">Erledigen bis..</string>
     <string name="todo_isFavorite">Als Favorit markieren?</string>
-    <string name="todo_linkToContact">Dieses Todo einen Kontakt zuweisen?</string>
+    <string name="todo_linkToContact">Todo einem Kontakt zuweisen?</string>
+    <string name="todo_linkToContactShort">Kontakt zuweisen...</string>
     <string name="todo_clickToShowContacts">Anklicken um Kontakte anzuzeigen...</string>
     <string name="todo_buttonCreate">Neues Todo erstellen</string>
 

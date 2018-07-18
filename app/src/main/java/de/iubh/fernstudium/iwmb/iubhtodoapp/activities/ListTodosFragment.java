@@ -112,13 +112,11 @@ public class ListTodosFragment extends Fragment implements RecyclerViewItemClick
 
     @Override
     public void onClick(View view, int position) {
-        Toast.makeText(view.getContext(), "Clicked Item on Position: " + position, Toast.LENGTH_SHORT).show();
         showDetail(position);
     }
 
     @Override
     public void onLongClick(View view, int position) {
-        Toast.makeText(view.getContext(), "Long Click Item on Position: " + position, Toast.LENGTH_LONG).show();
         selectedPositionForLongClick = position;
         DialogFragment onLongClickDialog = new OverviewOnLongClickDialog();
         onLongClickDialog.show(getActivity().getSupportFragmentManager(), "SHOW_LONG_CLICK_DIALOG");
@@ -175,8 +173,10 @@ public class ListTodosFragment extends Fragment implements RecyclerViewItemClick
         if (todoToDelete != null && listIndex >= 0) {
             todoDBService.deleteTodo(todoToDelete.getId());
             if (todoToDelete.getFileName() != null) {
-                File f = new File(todoToDelete.getFileName());
-                f.delete();
+                File f = new File(getActivity().getFilesDir(), todoToDelete.getFileName());
+                if(f.exists()){
+                    f.delete();
+                }
             }
             removeTodo();
         }
@@ -220,11 +220,13 @@ public class ListTodosFragment extends Fragment implements RecyclerViewItemClick
     }
 
     private Todo getTodoForId(int id) {
-        for (int i = 0; i < todos.size(); i++) {
-            Todo t = todos.get(i);
-            if (t.getId() == id) {
-                listIndex = i;
-                return t;
+        if(todos != null) {
+            for (int i = 0; i < todos.size(); i++) {
+                Todo t = todos.get(i);
+                if (t.getId() == id) {
+                    listIndex = i;
+                    return t;
+                }
             }
         }
         listIndex = -1;

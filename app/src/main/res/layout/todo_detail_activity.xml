@@ -183,11 +183,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:completionThreshold="1"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:singleLine="true"
-            android:textSize="18sp"
+            android:hint="@string/todo_linkToContactShort"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/idLinkedToDetail"
             app:layout_constraintTop_toBottomOf="@+id/idFavDetailButton"></AutoCompleteTextView>
